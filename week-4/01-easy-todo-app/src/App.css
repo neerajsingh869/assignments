@@ -1,0 +1,151 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-size:16px;
+    outline:1px solid red;
+}
+
+/* styles for main element */
+main {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    width:100vw;
+}
+
+/* styles for todoApp container element */
+#todoApp-container {
+    min-height:20vh;
+    width:40vw;
+    border:2px solid black;
+}
+
+/* styles for todoApp header element */
+#todoApp-header{
+    border:1px solid blue;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:10px 0px;
+}
+
+#todoApp-header > p {
+    font-size:1.75rem;
+    font-weight:bold;
+}
+
+/* styles for form and todos container element */
+#form-todos-container {
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+}
+
+/* styles related with form element */
+#form-container {
+    border:1px solid lightgray;
+    height:12vh;
+    width:90%;
+    padding:0.5rem;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#form-container > div {
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+}
+
+#form-container input {
+    border-width: 0;
+    border-bottom:1px solid lightgray;
+}
+
+#form-container button {
+    height:35%;
+    min-width:6rem;
+}
+
+#title-container {
+    display:flex;
+    flex-direction: column;
+    width:30%;
+}
+
+#desc-container {
+    display:flex;
+    flex-direction: column;
+    width:60%;
+}
+
+/* styles related with todos list element */
+#todos-container {
+    max-height:50vh;
+    overflow-y:scroll;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    align-items: center;
+    border:1px solid lightgray;
+    width:100%;
+    position: relative;
+}
+
+#todoItem-container {
+    display:flex;
+    width:100%;
+    padding:0.25rem 0.5rem;
+}
+
+#comp-input-container {
+    width:10%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#todoInfo-container {
+    width:80%;
+}
+
+#delTodo-container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:rgb(240, 18, 18);
+}
+
+/* From section
+#form-comp-area{
+    height:30%;
+    width:50%;
+    border:1px solid blue;
+}
+
+#res-area {
+    border:1px solid black;
+    width:100px;
+    height:20px;
+}
+
+Todos section */
+/* #todoArea {
+    height:100%;
+    width:80%;
+    border:1px solid blue;
+    overflow-y: scroll;
+}
+
+#fetch-comp-area {
+    height:50%;
+    width:100%;
+    border:1px solid blue;
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+} */
