@@ -20,7 +20,7 @@ function App() {
       console.error(err);
     })
   }
-  function createNewTodo(){
+  function createNewTodo(event){
     console.log("Creating new todo");
     let todoTitleInput = document.querySelector('#title-input');
     let altMsg = null;
@@ -70,7 +70,7 @@ function App() {
     })
   }
 
-  function updateTodoStatusAndDom(id){
+  function markTodoComplete(id){
     let todoItemDiv = document.querySelectorAll('#todoItem-container');
     let todo = null;
     for(let todoItem of todoItemDiv){
@@ -90,7 +90,10 @@ function App() {
       todo.children[1].style.textDecoration = '';
     }
   }
-
+  useEffect(() => {
+    fetchAllTodos();
+  }, []);
+  console.log("hello");
   return (
     <main>
       <div id="todoApp-container">
@@ -98,91 +101,61 @@ function App() {
           <p>TODO App</p>
         </div>
         <div id="form-todos-container">
-          <form action="" id="form-container">
-            <div>
-              <div id="title-container">
-                <label htmlFor="title-input">Title</label>
-                <input type="text" id="title-input" placeholder="Write todo title"/>
-              </div>
-              <div id="desc-container">
-                <label htmlFor="desc-input">Description</label>
-                <input type="text" id="desc-input" placeholder="Write todo description"/>
-              </div>
-            </div>
-            <button type="button" onClick={createNewTodo}>Add Todo</button>
-          </form>
-          <div id="todos-container">
-            {todos.map(todo => {
-              return <div id="todoItem-container" data-id={todo.id}>
-                <div id="comp-input-container">
-                  <input type="checkbox" id="comp-input" onChange={() => updateTodoStatusAndDom(todo.id)}/>
-                </div>
-                <div id="todoInfo-container">
-                  <div id="todoTitle-container">{todo.title}</div>
-                  <div id="todoDesc-container">{todo.description}</div>
-                </div>
-                <div id="delTodo-container">
-                  <i className="fa-solid fa-trash" onClick={() => deleteTodo(todo.id)}></i>
-                </div>
-              </div>
-            })}
-          </div>
+          <CreateTodoForm createTodo={createNewTodo}/>
+          <DisplayTodoItems todoState={todos} 
+                            deleteTodo={deleteTodo} 
+                            markTodoComplete={markTodoComplete}/>
         </div>
       </div>
-      {/* <h1>Easy Todo App</h1>
-      <hr />
-      <main>
-        <FormComponent newTodoState={newTodo} createNewTodo={createNewTodo}></FormComponent>
-        <FetchComponent todoState={todos} fetchAllTodos={fetchAllTodos} deleteTodo={deleteTodo}></FetchComponent>
-      </main> */}
     </main>
   )
 }
 
-function FormComponent(props){
+function CreateTodoForm(props) {
   return (
-    <div id="form-comp-area">
-      <form action="">
-        <label htmlFor="title-input">Title</label>
-        <input type="text" id="title-input" />
-        <label htmlFor="comp-input">Completed?</label>
-        <input type="checkbox" id="comp-input"/>
-        <label htmlFor="desc-input">Description</label>
-        <input type="text" id="desc-input" />
-        <button id="post-todo" type="button" onClick={props.createNewTodo}>Create Todo</button>
-      </form>
-      <div id="res-area">
-        {JSON.stringify(props.newTodoState)}
-      </div> 
+    <form action="" id="form-container">
+      <div>
+        <div id="title-container">
+          <label htmlFor="title-input">Title</label>
+          <input type="text" id="title-input" placeholder="Write todo title" required/>
+        </div>
+        <div id="desc-container">
+          <label htmlFor="desc-input">Description</label>
+          <input type="text" id="desc-input" placeholder="Write todo description" required/>
+        </div>
+      </div>
+      <button type="button" onClick={props.createTodo}>Add Todo</button>
+    </form>
+  );
+}
+
+function DisplayTodoItems(props) {
+  return (
+    <div className="scrollbar" id="todos-container">
+      {props.todoState.map(todo => {
+        return <TodoItem todo={todo} 
+                         deleteTodo={props.deleteTodo} 
+                         markTodoComplete={props.markTodoComplete}/>
+      })}
     </div>
   );
 }
 
-function FetchComponent(props){
+function TodoItem(props) {
   return (
-    <div id="fetch-comp-area">
-      <div id="todoArea">
-          {props.todoState.map(todo => {
-            return <Todo deleteTodo={props.deleteTodo} key={todo.id} id={todo.id} title={todo.title} description={todo.description}></Todo>
-          })}
+    <div id="todoItem-container" data-id={props.todo.id}>
+      <div id="comp-input-container">
+        <input type="checkbox" id="comp-input" onChange={() => props.markTodoComplete(props.todo.id)}/>
       </div>
-      <button id="get-todo" type="button" onClick={props.fetchAllTodos}>Fetch toDo</button>
+      <div id="todoInfo-container">
+        <div id="todoTitle-container">{props.todo.title}</div>
+        <div id="todoDesc-container">{props.todo.description}</div>
+      </div>
+      <div id="delTodo-container">
+        <i className="fa-solid fa-trash" onClick={() => props.deleteTodo(props.todo.id)}></i>
+      </div>
     </div>
   );
-}
-
-function Todo(props) {
-    
-    // Add a delete button here so user can delete a TODO.
-    return (
-      <div id={props.id}>
-          {props.title}
-          &nbsp;||&nbsp;
-          {props.description}
-          &nbsp;||&nbsp;
-          <button onClick={() => props.deleteTodo(props.id)}>Delete</button>
-      </div>
-    );
 }
 
 export default App
