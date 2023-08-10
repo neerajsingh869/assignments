@@ -21,9 +21,34 @@
     background: #447fb9;
 }
 
+/* Styles for todo items container */
 #todos-container {
     max-height:50vh;
     overflow-y:auto;
     width:100%;
     position: relative;
+}
+
+/* Styles for single todo item */
+#todoItem-container {
+    display:flex;
+    width:90%;
+    padding:0.5rem 0.5rem;
+    border-bottom: 1px solid #75C2F6;
+}
+
+#comp-input-container {
+    width:10%;
+}
+
+#todoInfo-container {
+    width:80%;
+}
+
+#todoTitle-container {
+    font-weight:bold;
+}
+
+#delTodo-container {
+    color:rgb(240, 18, 18);
 }
