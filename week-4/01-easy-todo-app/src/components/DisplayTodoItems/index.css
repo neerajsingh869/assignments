@@ -1,0 +1,29 @@
+/* width */
+.scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+  
+/* Track */
+.scrollbar::-webkit-scrollbar-track {
+    background: #75C2F6;
+    box-shadow: inset 0 0 5px grey; 
+    border-radius:4px;
+}
+   
+/* Handle */
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #1D5D9B; 
+    border-radius:4px;
+}
+  
+/* Handle on hover */
+.scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #447fb9;
+}
+
+#todos-container {
+    max-height:50vh;
+    overflow-y:auto;
+    width:100%;
+    position: relative;
+}

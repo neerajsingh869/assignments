@@ -1,85 +1,75 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+import DisplayTodoItems from "./components/DisplayTodoItems/index.jsx";
+import TodoForm from "./components/CreateTodoForm/index.jsx";
 import "./App.css";
+import "./components/CreateTodoForm/index.css"
+import "./components/DisplayTodoItems/index.css"
 
 function App() {
   // state variable for todo lists
   const [todos, setTodos] = useState([]);
 
-  function fetchAllTodos() {
-    console.log("fetching...");
-    fetch("http://localhost:3000/todos")
-      .then((response) => {
-        response
-          .json()
-          .then((data) => {
-            console.log(data);
-            setTodos(data);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  async function fetchAllTodos() {
+    try {
+      let response = await axios.get("http://localhost:3000/todos");
+      setTodos(response.data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function createNewTodo() {
-    console.log("Creating new todo");
-    let todoTitleInput = document.querySelector("#title-input");
+  /**
+  * Returns alert message if any input field left empty.
+  *
+  * @param {string} todoTitle Form label "Title" input.
+  * @param {string} todoDesc From label "Description" input.
+  * @return {string} alert message if any input field left empty.
+  */
+  function getAlertMsg(todoTitle, todoDesc) {
     let altMsg = null;
-    if (!todoTitleInput.value) {
+    if (!todoTitle) {
       altMsg = "Title can't be empty. ";
     }
-    let todoDescInput = document.querySelector("#desc-input");
-    if (!todoDescInput.value) {
+    if (!todoDesc) {
       altMsg =
         altMsg === null
           ? "Description can't be empty. "
           : altMsg + "Description can't be empty. ";
     }
+    return altMsg;
+  }
+
+  async function createNewTodo() {
+    let todoTitleInput = document.querySelector("#title-input");
+    let todoDescInput = document.querySelector("#desc-input");
+
+    let altMsg = getAlertMsg(todoTitleInput.value, todoDescInput.value);
+
     if (altMsg) {
       window.alert(altMsg);
     } else {
-      console.log("sending fetch post request");
-      fetch("http://localhost:3000/todos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      try {
+        await axios.post("http://localhost:3000/todos", {
           title: todoTitleInput.value,
           completed: false,
           description: todoDescInput.value,
-        }),
-      })
-        .then((response) => {
-          response
-            .json()
-            .then(() => {
-              fetchAllTodos();
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        })
-        .catch((err) => {
-          console.error(err);
         });
+        fetchAllTodos();   
+      } catch (err) {
+        console.error(err);
+      }
     }
-    console.log(todoTitleInput.value, todoDescInput.value);
   }
 
-  function deleteTodo(id) {
+  async function deleteTodo(id) {
     let delURL = "http://localhost:3000/todos/" + id;
-    fetch(delURL, {
-      method: "DELETE",
-    })
-      .then(() => {
-        fetchAllTodos();
-        console.log("Deletion successful");
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      await axios.delete(delURL);
+      fetchAllTodos();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   function markTodoComplete(id) {
@@ -91,11 +81,8 @@ function App() {
         break;
       }
     }
-    console.log(todo);
-    console.log(todo.children[1]);
     // get checkbox input value
     let compStatus = todo.children[0].children[0];
-    console.log(compStatus);
     if (compStatus.checked) {
       todo.children[1].style.textDecoration = "line-through";
     } else {
@@ -115,7 +102,7 @@ function App() {
           <p>TODO App</p>
         </div>
         <div className="dis-flex flexd-col ai-center" id="form-todos-container">
-          <CreateTodoForm createTodo={createNewTodo} />
+          <TodoForm createTodo={createNewTodo} />
           <DisplayTodoItems
             todoState={todos}
             deleteTodo={deleteTodo}
@@ -124,76 +111,6 @@ function App() {
         </div>
       </div>
     </main>
-  );
-}
-
-function CreateTodoForm(props) {
-  return (
-    <form action="" id="form-container" className="dis-flex flexd-col jc-around ai-center">
-      <div className="dis-flex jc-between">
-        <div className="dis-flex flexd-col" id="title-container">
-          <label htmlFor="title-input">Title</label>
-          <input
-            type="text"
-            id="title-input"
-            placeholder="Write todo title"
-            required
-          />
-        </div>
-        <div className="dis-flex flexd-col" id="desc-container">
-          <label htmlFor="desc-input">Description</label>
-          <input
-            type="text"
-            id="desc-input"
-            placeholder="Write todo description"
-            required
-          />
-        </div>
-      </div>
-      <button type="button" onClick={props.createTodo}>
-        Add Todo
-      </button>
-    </form>
-  );
-}
-
-function DisplayTodoItems(props) {
-  return (
-    <div className="scrollbar dis-flex flexd-col ai-center" id="todos-container">
-      {props.todoState.map((todo) => {
-        return (
-          <TodoItem
-            todo={todo}
-            deleteTodo={props.deleteTodo}
-            markTodoComplete={props.markTodoComplete}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
-function TodoItem(props) {
-  return (
-    <div id="todoItem-container" data-id={props.todo.id}>
-      <div className="ele-center" id="comp-input-container">
-        <input
-          type="checkbox"
-          id="comp-input"
-          onChange={() => props.markTodoComplete(props.todo.id)}
-        />
-      </div>
-      <div id="todoInfo-container">
-        <div id="todoTitle-container">{props.todo.title}</div>
-        <div id="todoDesc-container">{props.todo.description}</div>
-      </div>
-      <div className="ele-center" id="delTodo-container">
-        <i
-          className="fa-solid fa-trash fa-lg"
-          onClick={() => props.deleteTodo(props.todo.id)}
-        ></i>
-      </div>
-    </div>
   );
 }
 

@@ -1,0 +1,61 @@
+/* styles related with form element */
+#form-container {
+    border:2px solid #75C2F6;
+    border-radius:0.5rem;
+    height:22vh;
+    width:90%;
+    padding:0.5rem 1.5rem;
+}
+
+#form-container > div {
+    width:100%;
+}
+
+#form-container input {
+    border-width: 0;
+    border-bottom:1px solid #75C2F6;
+    font-size:1.2rem;
+    background-color: transparent;
+    padding:0.25rem;
+    text-overflow: ellipsis;
+}
+
+#form-container input::placeholder {
+    color:#1D5D9B;
+}
+
+#form-container input:focus {
+    outline:none;
+}
+
+#form-container input:-webkit-autofill,
+#form-container input:-webkit-autofill:hover,
+#form-container input:-webkit-autofill:focus,
+#form-container input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+#form-container label {
+    font-size:1.2rem;
+    text-overflow: ellipsis;
+    margin-bottom:0.25rem;
+}
+
+#form-container button {
+    height:35%;
+    min-height:2rem;
+    max-height:2.5rem;
+    min-width:6rem;
+    background-color: #1D5D9B;
+    color:white;
+    border:0px;
+    border-radius:0.5rem;
+}
+
+#title-container {
+    width:35%;
+}
+
+#desc-container {
+    width:60%;
+}
