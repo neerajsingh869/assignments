@@ -6,6 +6,45 @@ import "./App.css";
 import "./components/CreateTodoForm/index.css"
 import "./components/DisplayTodoItems/index.css"
 
+/**
+  * Returns alert message if any input field left empty.
+  *
+  * @param {string} todoTitle Form label "Title" input.
+  * @param {string} todoDesc From label "Description" input.
+  * @return {string} alert message if any input field left empty.
+  */
+function getAlertMsg(todoTitle, todoDesc) {
+  let altMsg = null;
+  if (!todoTitle) {
+    altMsg = "Title can't be empty. ";
+  }
+  if (!todoDesc) {
+    altMsg =
+      altMsg === null
+        ? "Description can't be empty. "
+        : altMsg + "Description can't be empty. ";
+  }
+  return altMsg;
+}
+
+function markTodoComplete(id) {
+  let todoItemDiv = document.querySelectorAll("#todoItem-container");
+  let todo = null;
+  for (let todoItem of todoItemDiv) {
+    if (Number(todoItem.dataset.id) === id) {
+      todo = todoItem;
+      break;
+    }
+  }
+  // get checkbox input value
+  let compStatus = todo.children[0].children[0];
+  if (compStatus.checked) {
+    todo.children[1].style.textDecoration = "line-through";
+  } else {
+    todo.children[1].style.textDecoration = "";
+  }
+}
+
 function App() {
   // state variable for todo lists
   const [todos, setTodos] = useState([]);
@@ -17,27 +56,6 @@ function App() {
     } catch (err) {
       console.error(err);
     }
-  }
-
-  /**
-  * Returns alert message if any input field left empty.
-  *
-  * @param {string} todoTitle Form label "Title" input.
-  * @param {string} todoDesc From label "Description" input.
-  * @return {string} alert message if any input field left empty.
-  */
-  function getAlertMsg(todoTitle, todoDesc) {
-    let altMsg = null;
-    if (!todoTitle) {
-      altMsg = "Title can't be empty. ";
-    }
-    if (!todoDesc) {
-      altMsg =
-        altMsg === null
-          ? "Description can't be empty. "
-          : altMsg + "Description can't be empty. ";
-    }
-    return altMsg;
   }
 
   async function createNewTodo() {
@@ -71,25 +89,7 @@ function App() {
       console.error(err);
     }
   }
-
-  function markTodoComplete(id) {
-    let todoItemDiv = document.querySelectorAll("#todoItem-container");
-    let todo = null;
-    for (let todoItem of todoItemDiv) {
-      if (Number(todoItem.dataset.id) === id) {
-        todo = todoItem;
-        break;
-      }
-    }
-    // get checkbox input value
-    let compStatus = todo.children[0].children[0];
-    if (compStatus.checked) {
-      todo.children[1].style.textDecoration = "line-through";
-    } else {
-      todo.children[1].style.textDecoration = "";
-    }
-  }
-
+  
   // on page load, call service to fetch all todos
   useEffect(() => {
     fetchAllTodos();
