@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./styles.css"
 
 /// You need to add input boxes to take input for users to create a course.
@@ -13,15 +13,11 @@ function CreateCourse(props) {
     const [published, setPublished] = React.useState("");
 
     let navigate = useNavigate();
+    let location = useLocation();
 
-    // React.useEffect(() => {
-    //     let adminState = props.adminState;
-    //     console.log(adminState);
-    //     if(!adminState){
-    //         window.alert("Your session has ended. Please login again.");
-    //         navigate('/login');
-    //     }
-    // }, [])
+    let courseId = location.state.id;
+
+    console.log(courseId);
 
     React.useEffect(() => {
         async function isAdminLoggedIn() {
@@ -31,17 +27,27 @@ function CreateCourse(props) {
             if(localStorage.getItem('admin-token')){
                 // if token is present, check whether it is expired or not
                 try {
-                    await axios.get("http://localhost:3000/admin/courses", {
+                    let response = await axios.get("http://localhost:3000/admin/courses", {
                         headers: {
                             Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                         }
                     });  
+                    console.log(response.data);
+                    let courses = response.data.courses;
+                    let courseToUpdate = courses.find(c => c.id === courseId);
+                    setTitle(courseToUpdate.title);
+                    setDescription(courseToUpdate.description);
+                    setPrice(courseToUpdate.price);
+                    setImageUrl(courseToUpdate.imageUrl);
+                    setPublished(courseToUpdate.published);
+                    console.log(title, description, price, imageUrl, published);
+                    console.log(courseToUpdate);
                     props.adminStateChange(true);
                 } catch (err) {
                     console.log(err);
-                    window.alert("Your session has ended. Please login again.");
-                    props.adminStateChange(false);
-                    localStorage.removeItem('admin-token');
+                    // window.alert("Your session has ended. Please login again.");
+                    // props.adminStateChange(false);
+                    // localStorage.removeItem('admin-token');
                 }
             } else {
                 localStorage.removeItem('admin-token');
@@ -105,8 +111,8 @@ function CreateCourse(props) {
                 isFormValid = false;
             }   
         }
-        
-        if(!published) {
+
+        if(published === "") {
             alertMsg = (alertMsg === null) ? "-> Published field is mandatory. " : 
                                     alertMsg + "\n-> Published field is mandatory. ";
             isFormValid = false;
@@ -122,8 +128,8 @@ function CreateCourse(props) {
         return urlPattern.test(url);
     }
     
-    console.log("heelo");
-    async function createNewCourse(e){
+    console.log(published);
+    async function updateCourse(e){
         e.preventDefault();
 
         let {isFormValid, alertMsg} = formValidation();
@@ -132,7 +138,9 @@ function CreateCourse(props) {
             window.alert(alertMsg);
         } else {
             try {
-                let response = await axios.post("http://localhost:3000/admin/courses", {
+                let updateCourseUrl = `http://localhost:3000/admin/courses/${courseId}`;
+                console.log(updateCourseUrl);
+                let response = await axios.put(updateCourseUrl, {
                     title: title,
                     description: description,
                     imageUrl: imageUrl,
@@ -163,32 +171,32 @@ function CreateCourse(props) {
         <main className="ele-center">
             <section className="createCourse-section">
                 <header className="text-center">
-                    <h1>Create Course Panel</h1>
+                    <h1>Update Course Panel</h1>
                 </header>
                 <div className="createCourseForm-wrapper">
                     <form action="">
                         <div className="mb-normal">
                             <label htmlFor="title">Title</label>
-                            <input type="text" id="title" onChange={e => setTitle(e.target.value)}/>
+                            <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title}/>
                         </div>
                         <div className="mb-normal">
                             <label htmlFor="description">Description</label>
-                            <input type="text" id="description" onChange={e => setDescription(e.target.value)}/>
+                            <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description}/>
                         </div>
                         <div className="mb-normal">
                             <label htmlFor="image-url">Image Url</label>
-                            <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)}/>
+                            <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl}/>
                         </div>
                         <div className="mb-large d-flex jc-between">
                             <div>
                                 <label htmlFor="price">Price</label>
                                 <br />
-                                <input type="number" id="price" onChange={e => setPrice(e.target.value)}/>
+                                <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price}/>
                             </div>
                             <div>
                                 <label htmlFor="published">Published</label>
                                 <br />
-                                <select name="" id="published" onChange={e => setPublished(e.target.value)}>
+                                <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published}>
                                     <option value="" selected disabled hidden>Please select</option>
                                     <option value="true">True</option>
                                     <option value="false">False</option>
@@ -196,7 +204,7 @@ function CreateCourse(props) {
                             </div>
                         </div>
                         <div>
-                            <button type="submit" onClick={e => createNewCourse(e)}>Create Course</button>
+                            <button type="submit" onClick={e => updateCourse(e)}>Update Course</button>
                         </div>
                     </form>
                 </div>
