@@ -57,7 +57,8 @@ function CreateCourse(props) {
         let isFormValid = true;
         let alertMsg = null;
         console.log(title, description, imageUrl, price, published);
-
+        console.log("published type :" + typeof(published));
+        console.log("published conversion :" + published == "true");
         if(!title) {
             alertMsg = (alertMsg === null) ? "-> Title field is mandatory. " : 
                                     alertMsg + "\n-> Title field is mandatory. ";
@@ -137,7 +138,7 @@ function CreateCourse(props) {
                     description: description,
                     imageUrl: imageUrl,
                     price: price,
-                    published: Boolean(published),
+                    published: (published === "true"),
                     'HTTP_CONTENT_LANGUAGE': self.language
                 }, {
                     headers: {
