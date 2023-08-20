@@ -15,16 +15,19 @@ function CreateCourse(props) {
     let navigate = useNavigate();
     let location = useLocation();
 
-    let courseInfo = location.state.courseInfo;
-
-    console.log(courseInfo);
-
     React.useEffect(() => {
-        setTitle(courseInfo.title);
-        setDescription(courseInfo.description);
-        setPrice(String(courseInfo.price));
-        setImageUrl(courseInfo.imageUrl);
-        setPublished(String(courseInfo.published));
+        if(props.isAdminLoggedIn) {
+            let courseInfo = location.state.courseInfo;
+            console.log(courseInfo);
+            setTitle(courseInfo.title);
+            setDescription(courseInfo.description);
+            setPrice(String(courseInfo.price));
+            setImageUrl(courseInfo.imageUrl);
+            setPublished(String(courseInfo.published));
+        } else {
+            window.alert("Your session has ended. Please login again.");
+            navigate('/login');
+        }
     }, []);
 
     function formValidation() {
@@ -136,49 +139,52 @@ function CreateCourse(props) {
     }
 
     return (
-        // static page
-        <main className="ele-center">
-            <section className="createCourse-section">
-                <header className="text-center">
-                    <h1>Update Course Panel</h1>
-                </header>
-                <div className="createCourseForm-wrapper">
-                    <form action="">
-                        <div className="mb-normal">
-                            <label htmlFor="title">Title</label>
-                            <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} />
+        <>
+            {props.isAdminLoggedIn && (
+                <main className="ele-center">
+                    <section className="createCourse-section">
+                        <header className="text-center">
+                            <h1>Update Course Panel</h1>
+                        </header>
+                        <div className="createCourseForm-wrapper">
+                            <form action="">
+                                <div className="mb-normal">
+                                    <label htmlFor="title">Title</label>
+                                    <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} />
+                                </div>
+                                <div className="mb-normal">
+                                    <label htmlFor="description">Description</label>
+                                    <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description} />
+                                </div>
+                                <div className="mb-normal">
+                                    <label htmlFor="image-url">Image Url</label>
+                                    <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl} />
+                                </div>
+                                <div className="mb-large d-flex jc-between">
+                                    <div>
+                                        <label htmlFor="price">Price</label>
+                                        <br />
+                                        <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price} />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="published">Published</label>
+                                        <br />
+                                        <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
+                                            <option value="" selected disabled hidden>Please select</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="submit" onClick={e => validateFormAndUpdateCourse(e)}>Update Course</button>
+                                </div>
+                            </form>
                         </div>
-                        <div className="mb-normal">
-                            <label htmlFor="description">Description</label>
-                            <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description} />
-                        </div>
-                        <div className="mb-normal">
-                            <label htmlFor="image-url">Image Url</label>
-                            <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl} />
-                        </div>
-                        <div className="mb-large d-flex jc-between">
-                            <div>
-                                <label htmlFor="price">Price</label>
-                                <br />
-                                <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price} />
-                            </div>
-                            <div>
-                                <label htmlFor="published">Published</label>
-                                <br />
-                                <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
-                                    <option value="" selected disabled hidden>Please select</option>
-                                    <option value="true">True</option>
-                                    <option value="false">False</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <button type="submit" onClick={e => validateFormAndUpdateCourse(e)}>Update Course</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        </main>
+                    </section>
+                </main>
+            )}
+        </>
     );
 
 }

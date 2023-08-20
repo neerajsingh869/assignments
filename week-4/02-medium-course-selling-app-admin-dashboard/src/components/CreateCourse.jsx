@@ -5,7 +5,7 @@ import "./styles.css"
 
 /// You need to add input boxes to take input for users to create a course.
 /// I've added one input so you understand the api to do it.
-function CreateCourse() {
+function CreateCourse(props) {
     let navigate = useNavigate();
 
     const [title, setTitle] = React.useState("");
@@ -13,6 +13,13 @@ function CreateCourse() {
     const [imageUrl, setImageUrl] = React.useState("");
     const [price, setPrice] = React.useState("");
     const [published, setPublished] = React.useState("");
+
+    React.useEffect(() => {
+        if(!props.isAdminLoggedIn) {
+            window.alert("Your session has ended. Please login again.");
+            navigate('/login');
+        }
+    }, []);
 
     function formValidation() {
         let isFormValid = true;
@@ -124,49 +131,52 @@ function CreateCourse() {
     }
 
     return (
-        // static page
-        <main className="ele-center">
-            <section className="createCourse-section">
-                <header className="text-center">
-                    <h1>Create Course Panel</h1>
-                </header>
-                <div className="createCourseForm-wrapper">
-                    <form action="">
-                        <div className="mb-normal">
-                            <label htmlFor="title">Title</label>
-                            <input type="text" id="title" onChange={e => setTitle(e.target.value)} />
+        <>  
+            {props.isAdminLoggedIn && (
+                <main className="ele-center">
+                    <section className="createCourse-section">
+                        <header className="text-center">
+                            <h1>Create Course Panel</h1>
+                        </header>
+                        <div className="createCourseForm-wrapper">
+                            <form action="">
+                                <div className="mb-normal">
+                                    <label htmlFor="title">Title</label>
+                                    <input type="text" id="title" onChange={e => setTitle(e.target.value)} />
+                                </div>
+                                <div className="mb-normal">
+                                    <label htmlFor="description">Description</label>
+                                    <input type="text" id="description" onChange={e => setDescription(e.target.value)} />
+                                </div>
+                                <div className="mb-normal">
+                                    <label htmlFor="image-url">Image Url</label>
+                                    <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} />
+                                </div>
+                                <div className="mb-large d-flex jc-between">
+                                    <div>
+                                        <label htmlFor="price">Price</label>
+                                        <br />
+                                        <input type="number" id="price" onChange={e => setPrice(e.target.value)} />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="published">Published</label>
+                                        <br />
+                                        <select name="" id="published" onChange={e => setPublished(e.target.value)} >
+                                            <option value="" selected disabled hidden>Please select</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="submit" onClick={e => validateFormAndCreateCourse(e)} >Create Course</button>
+                                </div>
+                            </form>
                         </div>
-                        <div className="mb-normal">
-                            <label htmlFor="description">Description</label>
-                            <input type="text" id="description" onChange={e => setDescription(e.target.value)} />
-                        </div>
-                        <div className="mb-normal">
-                            <label htmlFor="image-url">Image Url</label>
-                            <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} />
-                        </div>
-                        <div className="mb-large d-flex jc-between">
-                            <div>
-                                <label htmlFor="price">Price</label>
-                                <br />
-                                <input type="number" id="price" onChange={e => setPrice(e.target.value)} />
-                            </div>
-                            <div>
-                                <label htmlFor="published">Published</label>
-                                <br />
-                                <select name="" id="published" onChange={e => setPublished(e.target.value)} >
-                                    <option value="" selected disabled hidden>Please select</option>
-                                    <option value="true">True</option>
-                                    <option value="false">False</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <button type="submit" onClick={e => validateFormAndCreateCourse(e)} >Create Course</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        </main>
+                    </section>
+                </main>
+            )}
+        </>
     );
 
 }

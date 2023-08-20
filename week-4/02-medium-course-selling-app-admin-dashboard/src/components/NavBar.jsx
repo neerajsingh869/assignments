@@ -2,30 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import "./styles.css";
 
-function NavBarBeforeLogin() {
-    return (
-        // static page
-        <header className="nav-header eleV-center">
-            <nav className="d-flex jc-between">
-                <div>
-                    <h1>
-                        <Link to="/" className="nav-link">CourseBazzar</Link>
-                    </h1>
-                </div>
-                <ul className="d-flex eleV-center">
-                    <li>
-                        <Link to="/login" className="nav-link">Login</Link>
-                    </li>
-                    <li>
-                        <Link to="/register" className="nav-link">Register</Link>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-    )
-}
-
-function NavBarAfterLogin(props) {
+function NavBar(props) {
 
     // simple method to logout user by removing jwt token
     function logoutUser() {
@@ -36,7 +13,6 @@ function NavBarAfterLogin(props) {
     }
 
     return (
-        // static page
         <header className="nav-header eleV-center">
             <nav className="d-flex jc-between">
                 <div>
@@ -45,19 +21,33 @@ function NavBarAfterLogin(props) {
                     </h1>
                 </div>
                 <ul className="d-flex eleV-center">
-                    <li>
-                        <Link to="/about" className="nav-link">Create Course</Link>
-                    </li>
-                    <li>
-                        <Link to="/courses" className="nav-link">All Courses</Link>
-                    </li>
-                    <li>
-                        <Link to="/" className="nav-link" onClick={logoutUser}>Logout</Link>
-                    </li>
+                    {props.isAdminLoggedIn ? (
+                        <>
+                            <li>
+                                <Link to="/about" className="nav-link">Create Course</Link>
+                            </li>
+                            <li>
+                                <Link to="/courses" className="nav-link">All Courses</Link>
+                            </li>
+                            <li>
+                                <Link to="/" className="nav-link" onClick={logoutUser}>Logout</Link>
+                            </li>
+                        </>
+                    ): (
+                        <>
+                            <li>
+                                <Link to="/login" className="nav-link">Login</Link>
+                            </li>
+                            <li>
+                                <Link to="/register" className="nav-link">Register</Link>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </nav>
         </header>
     )
+
 }
 
-export { NavBarBeforeLogin, NavBarAfterLogin };
+export default NavBar;

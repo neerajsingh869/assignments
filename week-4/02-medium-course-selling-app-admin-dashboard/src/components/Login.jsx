@@ -41,10 +41,11 @@ function Login(props) {
             window.alert(response.data.message); 
             // after successful login, take admin to landing page
             props.handleIsAdminLoggedIn(true);
-            navigate('/');     
+            navigate('/courses');   
         } catch (err) {
             console.log(err);
             window.alert(err.response.data.message);
+            localStorage.removeItem('admin-token');
             props.handleIsAdminLoggedIn(false);
         }
     }
