@@ -1,12 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./styles.css"
 
 /// File is incomplete. You need to add input boxes to take input for users to login.
 function Login(props) {
     const navigate = useNavigate();
-    // const [email, setEmail] = React.useState("");
+
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
 
@@ -15,7 +15,7 @@ function Login(props) {
         return emailPattern.test(email);
     }
 
-    async function loginAdmin(e) {
+    async function validateFormAndSubmit(e) {
         e.preventDefault();
 
         let isEmailInputValid = verifyEmailInput(username.trim());
@@ -40,51 +40,16 @@ function Login(props) {
             console.log(localStorage);
             window.alert(response.data.message); 
             // after successful login, take admin to landing page
-            // landing page will decide where to send admin
-            // props.adminStateChange(true);
+            props.handleIsAdminLoggedIn(true);
             navigate('/');     
         } catch (err) {
             console.log(err);
             window.alert(err.response.data.message);
-            // props.adminStateChange(false);
+            props.handleIsAdminLoggedIn(false);
         }
     }
 
     return (
-        // <main className="ele-center">
-        //     <section className="loginReg-section">
-        //         <header className="text-center">
-        //             <h1>Login to admin dashboard</h1>
-        //         </header>
-        //         <div>
-        //             <form action="">
-        //                 <div className="mb-normal">
-        //                     <label htmlFor="username">Email</label>
-        //                     <br />
-        //                     <input type="email" id="username" onChange={e => setUsername(e.target.value)}/>
-        //                 </div>
-        //                 <div className="mb-large">
-        //                     <label htmlFor="password">Password</label>
-        //                     <br />
-        //                     <input type="password" id="password" onChange={e => setPassword(e.target.value)}/>
-        //                 </div>
-        //                 <div>
-        //                     <button type="submit" onClick={e => loginAdmin(e)}>Login</button>
-        //                 </div>
-        //             </form>
-        //         </div>
-        //         <div className="text-center fs-medium">
-        //             <p>
-        //                 Don't have an account? &nbsp;
-        //                 <span>
-        //                     <a href="/register">Register here</a>
-        //                 </span>
-        //             </p>
-        //         </div>
-        //     </section>
-        // </main>
-
-        // static page
         <main className="ele-center">
             <section className="loginReg-section">
                 <header className="text-center">
@@ -95,15 +60,15 @@ function Login(props) {
                         <div className="mb-normal">
                             <label htmlFor="username">Email</label>
                             <br />
-                            <input type="email" id="username"/>
+                            <input type="email" id="username" onChange={(e) => setUsername(e.target.value)} />
                         </div>
                         <div className="mb-large">
                             <label htmlFor="password">Password</label>
                             <br />
-                            <input type="password" id="password"/>
+                            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} />
                         </div>
                         <div>
-                            <button type="submit">Login</button>
+                            <button type="submit" onClick={(e) => validateFormAndSubmit(e)}>Login</button>
                         </div>
                     </form>
                 </div>
@@ -111,23 +76,14 @@ function Login(props) {
                     <p>
                         Don't have an account? &nbsp;
                         <span>
-                            <a href="/register">Register here</a>
+                            <Link to="/register">Register here</Link>
                         </span>
                     </p>
                 </div>
             </section>
         </main>
-
-        // <div>
-        //     {/* <h1>Login to admin dashboard</h1>
-        //     <br/>
-        //     Email - <input type={"text"} onChange={e => setEmail(e.target.value)} />
-        //     <br/>
-        //     <button>Login</button>
-        //     <br/>
-        //     New here? <a href="/register">Register</a> */}
-        // </div>
     );
+
 }
 
 export default Login;

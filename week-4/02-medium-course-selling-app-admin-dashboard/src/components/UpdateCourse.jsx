@@ -15,49 +15,17 @@ function CreateCourse(props) {
     let navigate = useNavigate();
     let location = useLocation();
 
-    let courseId = location.state.id;
+    let courseInfo = location.state.courseInfo;
 
-    console.log(courseId);
+    console.log(courseInfo);
 
-    // React.useEffect(() => {
-    //     async function isAdminLoggedIn() {
-    //         console.log("Inside admin loggin check");
-    //         console.log(localStorage.getItem('admin-token'));
-    //         // check whether token in present or not
-    //         if(localStorage.getItem('admin-token')){
-    //             // if token is present, check whether it is expired or not
-    //             try {
-    //                 let response = await axios.get("http://localhost:3000/admin/courses", {
-    //                     headers: {
-    //                         Authorization: 'Bearer ' + localStorage.getItem('admin-token')
-    //                     }
-    //                 });  
-    //                 console.log(response.data);
-    //                 let courses = response.data.courses;
-    //                 let courseToUpdate = courses.find(c => c.id === courseId);
-    //                 setTitle(courseToUpdate.title);
-    //                 setDescription(courseToUpdate.description);
-    //                 setPrice(courseToUpdate.price);
-    //                 setImageUrl(courseToUpdate.imageUrl);
-    //                 setPublished(courseToUpdate.published);
-    //                 console.log(title, description, price, imageUrl, published);
-    //                 console.log(courseToUpdate);
-    //                 props.adminStateChange(true);
-    //             } catch (err) {
-    //                 console.log(err);
-    //                 // window.alert("Your session has ended. Please login again.");
-    //                 // props.adminStateChange(false);
-    //                 // localStorage.removeItem('admin-token');
-    //             }
-    //         } else {
-    //             localStorage.removeItem('admin-token');
-    //             window.alert("You can't access this route. Please login.");
-    //             navigate('/login');
-    //             props.adminStateChange(false);
-    //         }
-    //     }
-    //     isAdminLoggedIn();
-    // }, []);
+    React.useEffect(() => {
+        setTitle(courseInfo.title);
+        setDescription(courseInfo.description);
+        setPrice(String(courseInfo.price));
+        setImageUrl(courseInfo.imageUrl);
+        setPublished(String(courseInfo.published));
+    }, []);
 
     function formValidation() {
         let isFormValid = true;
@@ -128,8 +96,7 @@ function CreateCourse(props) {
         return urlPattern.test(url);
     }
     
-    console.log(published);
-    async function updateCourse(e){
+    async function validateFormAndUpdateCourse(e){
         e.preventDefault();
 
         let {isFormValid, alertMsg} = formValidation();
@@ -144,8 +111,8 @@ function CreateCourse(props) {
                     title: title,
                     description: description,
                     imageUrl: imageUrl,
-                    price: price,
-                    published: Boolean(published),
+                    price: Number(price),
+                    published: (published === "true"),
                     'HTTP_CONTENT_LANGUAGE': self.language
                 }, {
                     headers: {
@@ -157,6 +124,7 @@ function CreateCourse(props) {
             } catch (err) {
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
+                    props.handleIsAdminLoggedIn(false);
                     navigate('/login');
                 }
                 else{
@@ -168,49 +136,6 @@ function CreateCourse(props) {
     }
 
     return (
-        // <main className="ele-center">
-        //     <section className="createCourse-section">
-        //         <header className="text-center">
-        //             <h1>Update Course Panel</h1>
-        //         </header>
-        //         <div className="createCourseForm-wrapper">
-        //             <form action="">
-        //                 <div className="mb-normal">
-        //                     <label htmlFor="title">Title</label>
-        //                     <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title}/>
-        //                 </div>
-        //                 <div className="mb-normal">
-        //                     <label htmlFor="description">Description</label>
-        //                     <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description}/>
-        //                 </div>
-        //                 <div className="mb-normal">
-        //                     <label htmlFor="image-url">Image Url</label>
-        //                     <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl}/>
-        //                 </div>
-        //                 <div className="mb-large d-flex jc-between">
-        //                     <div>
-        //                         <label htmlFor="price">Price</label>
-        //                         <br />
-        //                         <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price}/>
-        //                     </div>
-        //                     <div>
-        //                         <label htmlFor="published">Published</label>
-        //                         <br />
-        //                         <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published}>
-        //                             <option value="" selected disabled hidden>Please select</option>
-        //                             <option value="true">True</option>
-        //                             <option value="false">False</option>
-        //                         </select>
-        //                     </div>
-        //                 </div>
-        //                 <div>
-        //                     <button type="submit" onClick={e => updateCourse(e)}>Update Course</button>
-        //                 </div>
-        //             </form>
-        //         </div>
-        //     </section>
-        // </main>
-
         // static page
         <main className="ele-center">
             <section className="createCourse-section">
@@ -221,26 +146,26 @@ function CreateCourse(props) {
                     <form action="">
                         <div className="mb-normal">
                             <label htmlFor="title">Title</label>
-                            <input type="text" id="title"/>
+                            <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} />
                         </div>
                         <div className="mb-normal">
                             <label htmlFor="description">Description</label>
-                            <input type="text" id="description"/>
+                            <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description} />
                         </div>
                         <div className="mb-normal">
                             <label htmlFor="image-url">Image Url</label>
-                            <input type="url" id="image-url"/>
+                            <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl} />
                         </div>
                         <div className="mb-large d-flex jc-between">
                             <div>
                                 <label htmlFor="price">Price</label>
                                 <br />
-                                <input type="number" id="price"/>
+                                <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price} />
                             </div>
                             <div>
                                 <label htmlFor="published">Published</label>
                                 <br />
-                                <select name="" id="published">
+                                <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
                                     <option value="" selected disabled hidden>Please select</option>
                                     <option value="true">True</option>
                                     <option value="false">False</option>
@@ -248,18 +173,14 @@ function CreateCourse(props) {
                             </div>
                         </div>
                         <div>
-                            <button type="submit">Update Course</button>
+                            <button type="submit" onClick={e => validateFormAndUpdateCourse(e)}>Update Course</button>
                         </div>
                     </form>
                 </div>
             </section>
         </main>
-        // <div>
-        //     <h1>Create Course Page</h1>
-        //     <input type={"text"} onChange={e => setTitle(e.target.value)} />
-        //     <button onClick={() => console.log(title)}>Create Course</button>
-        // </div>
     );
+
 }
 
 export default CreateCourse;

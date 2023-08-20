@@ -126,6 +126,10 @@ nav ul li {
 }
 
 /****************** styles for LANDING PAGE components ******************/
+div.welcomePage-wrapper {
+    height:100%;
+    width:100%;
+}
 
 
 /****************** styles for REGISTER & LOGIN components ****************** /

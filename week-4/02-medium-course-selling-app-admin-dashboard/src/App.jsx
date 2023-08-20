@@ -13,38 +13,33 @@ import { NavBarBeforeLogin, NavBarAfterLogin } from './components/NavBar';
 // based on the route.
 // You can also try going to /random and see what happens (a route that doesnt exist)
 function App() {
-    const [adminState, setAdminState] = React.useState(false);
-    const [navBar, setNavBar] = React.useState(null);
+    const [isAdminLoggedIn, setIsAdminLoggedIn] = React.useState(false);
 
-    function handleAdminState(newState) {
-        setAdminState(newState);
-    }
-
+    // find initial state of isAdminLoggedInState
     React.useEffect(() => {
-        console.log(adminState);
-        if(adminState) {
-            setNavBar(<NavBarAfterLogin />);
+        if(localStorage.getItem('admin-token')) {
+            setIsAdminLoggedIn(true);
         } else {
-            setNavBar(<NavBarBeforeLogin />);
+            setIsAdminLoggedIn(false);
         }
-        console.log(navBar);
-    }, [adminState]);
+    }, []);
 
     return (
         <>  
             <Router>
-                {navBar}
+                {isAdminLoggedIn === true ? <NavBarAfterLogin handleIsAdminLoggedIn={setIsAdminLoggedIn} /> : <NavBarBeforeLogin />}
                 <Routes>
-                    <Route path="/" element={<Landing adminStateChange={handleAdminState} />} />
-                    <Route path="/login" element={<Login adminStateChange={handleAdminState} />} />
-                    <Route path="/register" element={<Register adminStateChange={handleAdminState} />} />
-                    <Route path="/about" element={<CreateCourse adminStateChange={handleAdminState} />} />
-                    <Route path="/update/:id" element={<UpdateCourse adminStateChange={handleAdminState} />} />
-                    <Route path="/courses" element={<ShowCourses adminStateChange={handleAdminState} />} />
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/login" element={<Login isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/about" element={<CreateCourse handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
+                    <Route path="/update/:id" element={<UpdateCourse handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
+                    <Route path="/courses" element={<ShowCourses handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
                 </Routes>
             </Router>
         </>
     );
+
 }
 
 export default App;
