@@ -53,6 +53,7 @@ app.post('/admin/signup', (req, res) => {
     ADMINS.push(newAdmin);
     fs.writeFileSync('admins.json', JSON.stringify(ADMINS));
     const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+    // const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: 30 });
     res.json({ message: 'Admin created successfully', token });
   }
 });
@@ -62,6 +63,7 @@ app.post('/admin/login', (req, res) => {
   const admin = ADMINS.find(a => a.username === username && a.password === password);
   if (admin) {
     const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+    // const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: 30 });
     res.json({ message: 'Logged in successfully', token });
   } else {
     res.status(403).json({ message: 'Invalid username or password' });
@@ -102,6 +104,7 @@ app.post('/users/signup', (req, res) => {
     USERS.push(newUser);
     fs.writeFileSync('users.json', JSON.stringify(USERS));
     const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+    // const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: 30 });
     res.json({ message: 'User created successfully', token });
   }
 });
@@ -111,6 +114,7 @@ app.post('/users/login', (req, res) => {
   const user = USERS.find(u => u.username === username && u.password === password);
   if (user) {
     const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+    // const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: 30 });
     res.json({ message: 'Logged in successfully', token });
   } else {
     res.status(403).json({ message: 'Invalid username or password' });
