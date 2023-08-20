@@ -5,7 +5,8 @@ import "./styles.css"
 
 /// You need to add input boxes to take input for users to create a course.
 /// I've added one input so you understand the api to do it.
-function CreateCourse(props) {
+function UpdateCourse(props) {
+    const [id, setId] = React.useState("");
     const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [imageUrl, setImageUrl] = React.useState("");
@@ -19,6 +20,7 @@ function CreateCourse(props) {
         if(props.isAdminLoggedIn) {
             let courseInfo = location.state.courseInfo;
             console.log(courseInfo);
+            setId(courseInfo.id);
             setTitle(courseInfo.title);
             setDescription(courseInfo.description);
             setPrice(String(courseInfo.price));
@@ -108,7 +110,7 @@ function CreateCourse(props) {
             window.alert(alertMsg);
         } else {
             try {
-                let updateCourseUrl = `http://localhost:3000/admin/courses/${courseId}`;
+                let updateCourseUrl = `http://localhost:3000/admin/courses/${id}`;
                 console.log(updateCourseUrl);
                 let response = await axios.put(updateCourseUrl, {
                     title: title,
@@ -170,7 +172,6 @@ function CreateCourse(props) {
                                         <label htmlFor="published">Published</label>
                                         <br />
                                         <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
-                                            <option value="" selected disabled hidden>Please select</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>
@@ -189,4 +190,4 @@ function CreateCourse(props) {
 
 }
 
-export default CreateCourse;
+export default UpdateCourse;

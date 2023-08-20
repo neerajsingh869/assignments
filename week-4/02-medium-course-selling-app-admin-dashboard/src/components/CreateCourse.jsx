@@ -161,8 +161,8 @@ function CreateCourse(props) {
                                     <div>
                                         <label htmlFor="published">Published</label>
                                         <br />
-                                        <select name="" id="published" onChange={e => setPublished(e.target.value)} >
-                                            <option value="" selected disabled hidden>Please select</option>
+                                        <select name="" id="published" defaultValue={'DEFAULT'} onChange={e => setPublished(e.target.value)} >
+                                            <option value="DEFAULT" disabled hidden>Please select</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>

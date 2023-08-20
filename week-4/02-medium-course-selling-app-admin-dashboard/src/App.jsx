@@ -6,7 +6,6 @@ import CreateCourse from './components/CreateCourse';
 import Register from './components/Register';
 import ShowCourses from './components/ShowCourses';
 import UpdateCourse from './components/UpdateCourse';
-// import { NavBarBeforeLogin, NavBarAfterLogin } from './components/NavBar';
 import NavBar from './components/NavBar';
 
 // This file shows how you can do routing in React.
@@ -26,7 +25,6 @@ function App() {
     return (
         <>  
             <Router>
-                {/* {isAdminLoggedIn === true ? <NavBarAfterLogin handleIsAdminLoggedIn={setIsAdminLoggedIn} /> : <NavBarBeforeLogin />} */}
                 <NavBar isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />
                 <Routes>
                     <Route path="/" element={<Landing />} />

@@ -79,7 +79,7 @@ function ShowCourses(props) {
             <div className="courses-wrapper d-flex flex-wrap">
                 {courses.map(course => {
                     return (
-                        <Course courseInfo={course}
+                        <Course key={course.id} courseInfo={course}
                             publishOrUnpublishCourseFn={publishOrUnpublishCourse}/>
                     );
                 })}
@@ -103,7 +103,6 @@ function Course(props) {
                 </div>
                 <div className="d-flex jc-between">
                     <button className="course-action-btn fs-normal">
-                        {/* <Link to={`/update/${props.courseInfo.id}`} state={{id: props.courseInfo.id}}>Update</Link> */}
                         <Link to={`/update/${props.courseInfo.id}`} state={{courseInfo: props.courseInfo}}>Update</Link>
                     </button>
                     <button className="course-action-btn fs-normal">
