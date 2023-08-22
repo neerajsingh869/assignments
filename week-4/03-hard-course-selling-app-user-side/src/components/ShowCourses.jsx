@@ -19,22 +19,22 @@ function ShowCourses() {
 
 }
 
-function Course(props) {
+function Course({ courseInfo }) {
     
     return (
         <section className="course-card mb-large-normal">
-            <Link to={`/courses/${props.courseInfo.id}`} state={{courseInfo: props.courseInfo}}>
+            <Link to={`/courses/${courseInfo.id}`} state={{courseInfo: courseInfo}}>
                 <div>
-                    <img src={props.courseInfo.imageUrl} alt="" className="course-img"/>
+                    <img src={courseInfo.imageUrl} alt="" className="course-img"/>
                 </div>
                 <div style={{padding:"1.5rem 2rem"}}>
                     <div className="mb-large">
-                        <div className="mb-small fs-normal">{props.courseInfo.title}</div>
-                        <div>{props.courseInfo.description}</div>
+                        <div className="mb-small fs-normal">{courseInfo.title}</div>
+                        <div>{courseInfo.description}</div>
                     </div>
                     <div className="d-flex jc-between">
                         <button className="course-action-btn fs-normal">
-                            {props.courseInfo.price}
+                            {courseInfo.price}
                         </button>
                     </div>
                 </div>   
