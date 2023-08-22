@@ -2,9 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./styles.css";
 
-function NavBar() {
+function NavBar({ isUserLoggedIn, handleIsUserLoggedInState }) {
 
-    let isAdminLoggedIn = false;
+    // simple method to logout user by removing jwt token
+    function logoutUser() {
+        console.log("user logged out");
+        localStorage.removeItem('user-token');
+        handleIsUserLoggedInState(false);
+        console.log(localStorage);
+    }
 
     return (
         <header className="nav-header eleV-center">
@@ -15,7 +21,7 @@ function NavBar() {
                     </h1>
                 </div>
                 <ul className="d-flex eleV-center">
-                    {isAdminLoggedIn ? (
+                    {isUserLoggedIn ? (
                         <>
                             <li>
                                 <Link to="/courses/purchased" className="nav-link">Purchases</Link>
@@ -24,7 +30,7 @@ function NavBar() {
                                 <Link to="/courses" className="nav-link">All Courses</Link>
                             </li>
                             <li>
-                                <Link to="/" className="nav-link">Logout</Link>
+                                <Link to="/" className="nav-link" onClick={logoutUser} >Logout</Link>
                             </li>
                         </>
                     ): (

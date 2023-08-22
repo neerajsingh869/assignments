@@ -1,8 +1,54 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import "./styles.css";
 
-function Login() {
+function Login({ handleIsUserLoggedInState }) {
+
+    let navigate = useNavigate();
+
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+
+    function verifyEmailInput(email){
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailPattern.test(email);
+    }
+
+    async function validateFormAndSubmit(e) {
+        e.preventDefault();
+
+        let isEmailInputValid = verifyEmailInput(username.trim());
+
+        if(!isEmailInputValid){
+            window.alert("Please enter valid email");
+            return;
+        }
+
+        try {
+            let response = await axios.post("http://localhost:3000/users/login", {
+                'HTTP_CONTENT_LANGUAGE': self.language
+            }, {
+                headers: {
+                    username: username,
+                    password: password
+                }
+            });
+            console.log(response.data); 
+            // save jwt token in localStorage to monitor user session
+            localStorage.setItem('user-token', response.data.token);
+            console.log(localStorage);
+            window.alert(response.data.message); 
+            // after successful login, take admin to landing page
+            handleIsUserLoggedInState(true);
+            navigate('/courses');   
+        } catch (err) {
+            console.log(err);
+            window.alert(err.response.data.message);
+            localStorage.removeItem('user-token');
+            handleIsUserLoggedInState(false);
+        }
+    }
 
     return (
         <main className="ele-center">
@@ -15,15 +61,15 @@ function Login() {
                         <div className="mb-normal">
                             <label htmlFor="username">Email</label>
                             <br />
-                            <input type="email" id="username" />
+                            <input type="email" id="username" onChange={(e) => setUsername(e.target.value)} />
                         </div>
                         <div className="mb-large">
                             <label htmlFor="password">Password</label>
                             <br />
-                            <input type="password" id="password" />
+                            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} />
                         </div>
                         <div>
-                            <button type="submit" >Login</button>
+                            <button type="submit" onClick={(e) => validateFormAndSubmit(e)} >Login</button>
                         </div>
                     </form>
                 </div>

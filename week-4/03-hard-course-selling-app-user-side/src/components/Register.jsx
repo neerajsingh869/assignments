@@ -1,8 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import "./styles.css";
 
 function Register() {
+
+    const navigate = useNavigate();
+
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+
+    function verifyEmailInput(email){
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailPattern.test(email);
+    }
+
+    async function validateFormAndSubmit(e) {
+        e.preventDefault();
+
+        let isEmailInputValid = verifyEmailInput(username.trim());
+
+        if(!isEmailInputValid){
+            window.alert("Please enter valid email");
+            return;
+        }
+
+        try {
+            let response = await axios.post("http://localhost:3000/users/signup", {username, password});
+            window.alert(response.data.message);
+            // after successful registration, take user to login page
+            navigate('/login');
+            console.log(response.data);   
+        } catch (err) {
+            window.alert(err.response.data.message);
+            console.log(err.response.data);
+        }
+    }
 
     return (
         <main className="ele-center">
@@ -15,15 +48,15 @@ function Register() {
                         <div className="mb-normal">
                             <label htmlFor="username">Email</label>
                             <br />
-                            <input type="email" id="username" />
+                            <input type="email" id="username" onChange={(e) => setUsername(e.target.value)} />
                         </div>
                         <div className="mb-large">
                             <label htmlFor="password">Password</label>
                             <br />
-                            <input type="password" id="password"/>
+                            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} />
                         </div>
                         <div>
-                            <button type="submit" >Register</button>
+                            <button type="submit" onClick={(e) => validateFormAndSubmit(e)} >Register</button>
                         </div>
                     </form>
                 </div>
