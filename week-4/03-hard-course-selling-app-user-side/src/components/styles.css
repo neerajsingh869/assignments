@@ -1,0 +1,220 @@
+* {
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    font-family:sans-serif;
+    /* outline:1px solid red; */
+}
+
+/* usable class styles */
+.ele-center {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.eleV-center {
+    display:flex;
+    align-items: center;
+}
+
+.d-flex {
+    display:flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap:wrap;
+}
+
+.flex-grow-normal {
+    flex-grow:1;
+}
+
+.ai-center {
+    align-items: center;
+}
+
+.jc-between {
+    justify-content: space-between;
+}
+
+.jc-around {
+    justify-content: space-around;
+}
+
+.mb-small {
+    margin-bottom:0.5rem;
+}
+
+.mb-normal {
+    margin-bottom:1rem;
+}
+
+.mb-large {
+    margin-bottom:1.5rem;
+}
+
+.mb-large-small {
+    margin-bottom:2rem;
+}
+
+.mb-large-normal {
+    margin-bottom:3rem;
+}
+
+.fs-small {
+    font-size:0.5rem;
+}
+
+.fs-normal {
+    font-size: 1rem;
+}
+
+.fs-large {
+    font-size: 1.5rem;
+}
+
+.text-center {
+    text-align:center;
+}
+
+.fs-medium {
+    font-size:1.2rem;
+}
+
+.text-overflow {
+    text-overflow: ellipsis;
+}
+
+button, i {
+    cursor: pointer;
+}
+
+main {
+    height:93.5vh;
+    width:98vw;
+}
+
+/****************** styles for Navigation Bar components ******************/
+nav {
+    width:100%;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    margin-right:20px;
+    font-size:18px;
+    font-weight:600;
+}
+
+.nav-link {
+    color:black;
+    text-decoration: none;
+}
+
+.nav-header {
+    height:6.5vh;
+    border:1px solid red;
+    padding:0px 40px;
+}
+
+/****************** styles for LANDING PAGE components ******************/
+div.welcomePage-wrapper {
+    height:100%;
+    width:100%;
+}
+
+
+/****************** styles for REGISTER & LOGIN components ****************** /
+/* styles related with registration section */
+section.loginReg-section {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25rem;
+    height: 22rem;
+    padding: 2rem;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+/* styles related with form */
+.loginReg-section form label, .loginReg-section form input, 
+.loginReg-section form button, .createCourse-section form label, 
+.createCourse-section form input, .createCourse-section form button,
+.createCourse-section form select {
+    font-size:1.2rem;
+    width:100%;
+}
+
+.loginReg-section form input, .loginReg-section form button, 
+.createCourse-section form input, .createCourse-section form button, 
+.createCourse-section form select {
+    height:2rem;
+}
+
+/******************* styles for CREATE COURSE components *******************/
+section.createCourse-section {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height:50%;
+    max-width:35rem;
+    width:50%;
+    padding: 2rem;
+    border:2px solid black;
+    border-radius: 10px;
+}
+
+/******************* styles for SHOW COURSES components *******************/
+.courses-wrapper {
+    margin-left:6%;
+    margin-right:2%;
+}
+
+section.course-card {
+    width:30%;
+    /* height:20rem; */
+    /* border:1px solid red; */
+    border-radius:10px;
+    box-shadow:0 0 10px 2px rgba(0, 0, 0, 0.1);
+    margin-right:3%;
+}
+
+.course-img {
+    width:100%;
+    height:auto;
+    border-radius:10px;
+}
+
+.course-action-btn {
+    width:30%;
+    height:2rem;
+    min-width:3.5rem;
+    border-width:0px;
+    border-radius:10px;
+    color:black;
+    background-color: white;
+    box-shadow:0 0 10px 2px rgba(0, 0, 0, 0.1);
+    transition:all 0.3s ease;
+}
+
+.course-action-btn:hover {
+    transform:scale(1.03);
+    box-shadow:0 0 10px 2px rgba(0, 0, 0, 0.2);
+}
+
+.unpublish-btn {
+    background-color: lightcoral;
+}
+
+.publish-btn {
+    background-color: lightgreen;
+}
