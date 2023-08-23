@@ -7,7 +7,7 @@ function Landing() {
         <main style={{width:"100vw", height:"93.5vh"}}>
             <div className="welcomePage-wrapper ele-center">
                 <h1>
-                    Welcome to course selling website!
+                    Welcome to CourseBazzar!
                 </h1>
             </div>
         </main>

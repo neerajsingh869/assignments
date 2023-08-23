@@ -64,11 +64,11 @@ function Course({ courseInfo }) {
                     <div className="mb-small fs-normal">{courseInfo.title}</div>
                     <div>{courseInfo.description}</div>
                 </div>
-                <div className="d-flex jc-between">
-                    <button className="course-action-btn fs-normal">
+                <div className="d-flex flex-col jc-between">
+                    <button className="after-purchase-btn fs-normal mb-normal">
                         View Course
                     </button>
-                    <button className="course-action-btn fs-normal">
+                    <button className="after-purchase-btn fs-normal">
                         View Invoice
                     </button>
                 </div>

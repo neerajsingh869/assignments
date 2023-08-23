@@ -38,6 +38,10 @@
     align-items: center;
 }
 
+.ai-stretch {
+    align-items: stretch;
+}
+
 .jc-between {
     justify-content: space-between;
 }
@@ -196,6 +200,9 @@ section.course-card {
 
 .course-action-btn {
     width:30%;
+}
+
+.course-action-btn, .after-purchase-btn, .before-purchase-btn {
     height:2rem;
     min-width:3.5rem;
     border-width:0px;
@@ -206,7 +213,7 @@ section.course-card {
     transition:all 0.3s ease;
 }
 
-.course-action-btn:hover {
+.course-action-btn:hover, .after-purchase-btn:hover, .before-purchase-btn:hover {
     transform:scale(1.03);
     box-shadow:0 0 10px 2px rgba(0, 0, 0, 0.2);
 }
@@ -217,4 +224,14 @@ section.course-card {
 
 .publish-btn {
     background-color: lightgreen;
+}
+
+/****************** styles for PURCHASE COURSE component ******************/
+button.after-purchase-btn {
+    flex-grow:1;
+    background-color: #9adeff;
+}
+
+button.before-purchase-btn {
+    background-color: #8dffa1;
 }
