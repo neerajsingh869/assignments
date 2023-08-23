@@ -164,19 +164,6 @@ section.loginReg-section {
     height:2rem;
 }
 
-/******************* styles for CREATE COURSE components *******************/
-section.createCourse-section {
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height:50%;
-    max-width:35rem;
-    width:50%;
-    padding: 2rem;
-    border:2px solid black;
-    border-radius: 10px;
-}
-
 /******************* styles for SHOW COURSES components *******************/
 .courses-wrapper {
     margin-left:6%;
@@ -216,14 +203,6 @@ section.course-card {
 .course-action-btn:hover, .after-purchase-btn:hover, .before-purchase-btn:hover {
     transform:scale(1.03);
     box-shadow:0 0 10px 2px rgba(0, 0, 0, 0.2);
-}
-
-.unpublish-btn {
-    background-color: lightcoral;
-}
-
-.publish-btn {
-    background-color: lightgreen;
 }
 
 /****************** styles for PURCHASE COURSE component ******************/

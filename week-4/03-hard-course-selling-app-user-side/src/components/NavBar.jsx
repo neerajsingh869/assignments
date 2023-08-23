@@ -22,32 +22,44 @@ function NavBar({ isUserLoggedIn, handleIsUserLoggedInState }) {
                 </div>
                 <ul className="d-flex eleV-center">
                     {isUserLoggedIn ? (
-                        <>
-                            <li>
-                                <Link to="/courses/purchased" className="nav-link">Purchases</Link>
-                            </li>
-                            <li>
-                                <Link to="/courses" className="nav-link">All Courses</Link>
-                            </li>
-                            <li>
-                                <Link to="/" className="nav-link" onClick={logoutUser} >Logout</Link>
-                            </li>
-                        </>
+                        <LoggedInMenus onClickLogoutHandler={logoutUser}/>
                     ): (
-                        <>
-                            <li>
-                                <Link to="/login" className="nav-link">Login</Link>
-                            </li>
-                            <li>
-                                <Link to="/register" className="nav-link">Register</Link>
-                            </li>
-                        </>
+                        <LoggedOutMenus />
                     )}
                 </ul>
             </nav>
         </header>
     );
 
+}
+
+function LoggedInMenus({ onClickLogoutHandler }) {
+    return (
+        <>
+            <li>
+                <Link to="/courses/purchased" className="nav-link">Purchases</Link>
+            </li>
+            <li>
+                <Link to="/courses" className="nav-link">All Courses</Link>
+            </li>
+            <li>
+                <Link to="/" className="nav-link" onClick={onClickLogoutHandler} >Logout</Link>
+            </li>
+        </>
+    )
+}
+
+function LoggedOutMenus() {
+    return (
+        <>
+            <li>
+                <Link to="/login" className="nav-link">Login</Link>
+            </li>
+            <li>
+                <Link to="/register" className="nav-link">Register</Link>
+            </li>
+        </>
+    )
 }
 
 export default NavBar;
