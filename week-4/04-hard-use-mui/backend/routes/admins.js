@@ -1,5 +1,6 @@
 // immport necessary libaries
 const express = require('express');
+const { authenticateJwt } = require('../middlewares/auth');
 const adminController = require('../controllers/admin-controller');
 
 // define constant variables
@@ -8,9 +9,9 @@ const router = express.Router();
 // define all admin routes
 router.post('/signup', adminController.signup);
 router.post('/login', adminController.login);
-router.post('/courses', adminController.createCourse);
-router.put('/courses/:courseId', adminController.editCourse);
-router.get('/courses', adminController.getCourses);
+router.post('/courses', authenticateJwt, adminController.createCourse);
+router.put('/courses/:courseId', authenticateJwt, adminController.editCourse);
+router.get('/courses', authenticateJwt, adminController.getCourses);
 
 // export router
 module.exports = router;

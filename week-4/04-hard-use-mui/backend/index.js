@@ -1,6 +1,7 @@
 // import necessary libaries
 const express = require('express');
 const db = require('./config/mongoose');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const rootRouter = require('./routes/index');
 

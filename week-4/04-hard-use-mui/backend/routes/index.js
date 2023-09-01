@@ -6,8 +6,6 @@ const adminsRouter = require('./admins');
 // define constant variables
 const router = express.Router();
 
-console.log("Index.js router speaking!");
-
 // redirect all admin incoming routes to adminsRouter
 router.use('/admin', adminsRouter);
 // redirect all user incoming routes to usersRouter

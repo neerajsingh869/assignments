@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // establish intial connection with db and listen
 // for initial error
-mongoose.connect('mongodb+srv://nsingh:<password>@cluster0.oibuqbf.mongodb.net/course_sell_dev').then(() => {
+mongoose.connect('mongodb+srv://nsingh:M1voCmaVNGwgruws@cluster0.oibuqbf.mongodb.net/course_sell_dev').then(() => {
     console.log("DB is connected succussfully.");
 }).catch(err => {
     console.log(err);
