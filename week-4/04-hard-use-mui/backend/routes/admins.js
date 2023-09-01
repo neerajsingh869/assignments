@@ -12,6 +12,7 @@ router.post('/login', adminController.login);
 router.post('/courses', authenticateJwt, adminController.createCourse);
 router.put('/courses/:courseId', authenticateJwt, adminController.editCourse);
 router.get('/courses', authenticateJwt, adminController.getCourses);
+router.get('/courses/:courseId', authenticateJwt, adminController.getCourse);
 
 // export router
 module.exports = router;

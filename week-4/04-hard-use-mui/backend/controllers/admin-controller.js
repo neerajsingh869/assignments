@@ -47,10 +47,16 @@ const getCourses = async (req, res) => {
     res.json({ courses });
 };
 
+const getCourse = async (req, res) => {
+    const course = await Course.findById(req.params.courseId);
+    res.json({ course })
+};
+
 module.exports = {
     signup, 
     login, 
     createCourse,
     editCourse,
-    getCourses
+    getCourses,
+    getCourse
 }
