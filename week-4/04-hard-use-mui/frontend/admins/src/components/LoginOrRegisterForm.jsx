@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
 function LoginOrRegisterForm({ formName, handleIsAdminLoggedIn }) {
@@ -24,8 +24,6 @@ function LoginOrRegisterForm({ formName, handleIsAdminLoggedIn }) {
             window.alert("Please enter valid email");
             return;
         }
-        console.log(formName);
-        console.log(typeof formName);
         if(formName === "Login") {
             try {
                 let response = await axios.post("http://localhost:3000/admin/login", {
@@ -36,14 +34,10 @@ function LoginOrRegisterForm({ formName, handleIsAdminLoggedIn }) {
                         password: password
                     }
                 });
-                console.log(response.data); 
-                // save jwt token in localStorage to monitor admin session
                 localStorage.setItem('admin-token', response.data.token);
-                console.log(localStorage);
                 window.alert(response.data.message); 
-                // after successful login, take admin to landing page
                 handleIsAdminLoggedIn(true);
-                navigate('/courses');   
+                navigate('/courses');
             } catch (err) {
                 console.log(err);
                 window.alert(err.response.data.message);
@@ -52,12 +46,12 @@ function LoginOrRegisterForm({ formName, handleIsAdminLoggedIn }) {
             }
         } else {
             try {
-                console.log(username, password);
-                let response = await axios.post("http://localhost:3000/admin/signup", {username, password});
+                let response = await axios.post("http://localhost:3000/admin/signup", {
+                    username, 
+                    password
+                });
                 window.alert(response.data.message);
-                // after successful registration, take admin to login page
                 navigate('/login');
-                console.log(response.data);   
             } catch (err) {
                 window.alert(err.response.data.message);
                 console.log(err.response.data);

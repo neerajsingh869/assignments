@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./styles.css"
 
-function ShowCourses(props) {
+function ShowCourses({ handleIsAdminLoggedIn }) {
     const navigate = useNavigate();
 
     const [courses, setCourses] = React.useState([]);
@@ -19,14 +19,13 @@ function ShowCourses(props) {
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                     }
-                }); 
-                console.log(response.data.courses);
+                });
                 setCourses(response.data.courses);
             } catch (err) {
                 console.log(err);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    props.handleIsAdminLoggedIn(false);
+                    handleIsAdminLoggedIn(false);
                     navigate('/login')
                 }
                 else{
@@ -67,7 +66,7 @@ function ShowCourses(props) {
             console.log(err);
             if(err.response.status === 403){
                 window.alert("Your session ended. Please login again");
-                props.handleIsAdminLoggedIn(false);
+                handleIsAdminLoggedIn(false);
                 navigate('/login')
             }
             else{
@@ -92,32 +91,32 @@ function ShowCourses(props) {
 
 }
 
-function Course(props) {
+function Course({ courseInfo, publishOrUnpublishCourseFn }) {
     
     return (
         <section className="course-card mb-large-normal">
             <div>
-                <img src={props.courseInfo.imageLink} alt="" className="course-img"/>
+                <img src={courseInfo.imageLink} alt="" className="course-img"/>
             </div>
             <div style={{padding:"1.5rem 2rem"}}>
                 <div className="mb-large">
-                    <div className="mb-small fs-normal">{props.courseInfo.title}</div>
-                    <div>{props.courseInfo.description}</div>
+                    <div className="mb-small fs-normal">{courseInfo.title}</div>
+                    <div>{courseInfo.description}</div>
                 </div>
                 <div className="d-flex jc-between">
                     <button className="course-action-btn fs-normal">
-                        <Link to={`/update/${props.courseInfo._id}`} state={{courseInfo: props.courseInfo}}>Update</Link>
+                        <Link to={`/update/${courseInfo._id}`} state={{courseInfo: courseInfo}}>Update</Link>
                     </button>
                     <button className="course-action-btn fs-normal">
                         Delete
                     </button>
-                    {props.courseInfo.published === true ? 
+                    {courseInfo.published === true ? 
                         <button className="course-action-btn fs-normal unpublish-btn"
-                                onClick={() => props.publishOrUnpublishCourseFn(props.courseInfo._id, false)}>
+                                onClick={() => publishOrUnpublishCourseFn(courseInfo._id, false)}>
                                 UnPublish
                         </button> : 
                         <button className="course-action-btn fs-normal publish-btn" 
-                                onClick={() => props.publishOrUnpublishCourseFn(props.courseInfo._id, true)}>
+                                onClick={() => publishOrUnpublishCourseFn(courseInfo._id, true)}>
                                 Publish
                         </button>
                     }

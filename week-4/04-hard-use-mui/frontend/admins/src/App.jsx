@@ -31,7 +31,7 @@ function App() {
                     <Route path="/login" element={<Login handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/about" element={<CreateCourse isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
-                    <Route path="/update/:id" element={<UpdateCourse isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
+                    <Route path="/update/:courseId" element={<UpdateCourse isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
                     <Route path="/courses" element={<ShowCourses handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
                 </Routes>
             </Router>

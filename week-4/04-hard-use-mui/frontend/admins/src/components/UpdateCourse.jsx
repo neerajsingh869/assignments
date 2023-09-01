@@ -1,36 +1,70 @@
-import React from "react";
-import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
-import "./styles.css"
+import React from 'react';
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
-/// You need to add input boxes to take input for users to create a course.
-/// I've added one input so you understand the api to do it.
-function UpdateCourse(props) {
-    const [id, setId] = React.useState("");
-    const [title, setTitle] = React.useState("");
-    const [description, setDescription] = React.useState("");
-    const [imageUrl, setImageUrl] = React.useState("");
-    const [price, setPrice] = React.useState("");
-    const [published, setPublished] = React.useState("");
-
+function UpdateCourse({ handleIsAdminLoggedIn }) {
     let navigate = useNavigate();
-    let location = useLocation();
+    // get courseId
+    const { courseId } = useParams();
+
+    const [course, setCourse] = React.useState(null);
 
     React.useEffect(() => {
-        if(props.isAdminLoggedIn) {
-            let courseInfo = location.state.courseInfo;
-            console.log(courseInfo);
-            setId(courseInfo._id);
-            setTitle(courseInfo.title);
-            setDescription(courseInfo.description);
-            setPrice(String(courseInfo.price));
-            setImageUrl(courseInfo.imageLink);
-            setPublished(String(courseInfo.published));
-        } else {
-            window.alert("Your session has ended. Please login again.");
-            navigate('/login');
+        async function fetchCourse() {
+            try {
+                let response = await axios.get(`http://localhost:3000/admin/courses/${courseId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('admin-token')
+                    }
+                });
+                setCourse(response.data.course);
+            } catch (err) {
+                console.log(err);
+                if(err.response.status === 403){
+                    window.alert("Your session ended. Please login again");
+                    handleIsAdminLoggedIn(false);
+                    navigate('/login')
+                }
+                else{
+                    window.alert("Something went wrongs. Please see the logs");
+                    console.log(err.response);
+                }
+            }
         }
+        fetchCourse();
     }, []);
+
+    console.log(courseId);
+    return (
+        <main>
+            {course && (
+                <>
+                    <Header />
+                    <div className="d-flex form-course-wrapper">
+                        <UpdateForm course={course} setCourse={setCourse} handleIsAdminLoggedIn={handleIsAdminLoggedIn}/>
+                        <CourseCard courseInfo={course} />
+                    </div>
+                </>
+            ) }
+        </main>
+    )
+}
+
+function Header() {
+    return (
+        <div style={{width: "100vw", height: "40vh", backgroundColor: "grey"}}>
+
+        </div>
+    )
+};
+
+function UpdateForm({ course, setCourse, handleIsAdminLoggedIn }) {
+    const [id, setId] = React.useState(course._id);
+    const [title, setTitle] = React.useState(course.title);
+    const [description, setDescription] = React.useState(course.description);
+    const [imageUrl, setImageUrl] = React.useState(course.imageLink);
+    const [price, setPrice] = React.useState(course.price);
+    const [published, setPublished] = React.useState(course.published);
 
     function formValidation() {
         let isFormValid = true;
@@ -111,11 +145,10 @@ function UpdateCourse(props) {
         } else {
             try {
                 let updateCourseUrl = `http://localhost:3000/admin/courses/${id}`;
-                console.log(updateCourseUrl);
-                let response = await axios.put(updateCourseUrl, {
+                await axios.put(updateCourseUrl, {
                     title: title,
                     description: description,
-                    imageLink: imageUrl,
+                    imageUrl: imageUrl,
                     price: Number(price),
                     published: (published === "true"),
                     'HTTP_CONTENT_LANGUAGE': self.language
@@ -124,12 +157,19 @@ function UpdateCourse(props) {
                         Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                     }
                 }); 
-                window.alert(response.data.message);
-                navigate('/courses');
+                let updatedCourse = {
+                    _id: id,
+                    title: title,
+                    description: description,
+                    imageLink: imageUrl,
+                    price: Number(price),
+                    published: published === "true"
+                }
+                setCourse(updatedCourse);
             } catch (err) {
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    props.handleIsAdminLoggedIn(false);
+                    handleIsAdminLoggedIn(false);
                     navigate('/login');
                 }
                 else{
@@ -139,55 +179,68 @@ function UpdateCourse(props) {
             }
         }
     }
-
+    
     return (
-        <>
-            {props.isAdminLoggedIn && (
-                <main className="ele-center">
-                    <section className="createCourse-section">
-                        <header className="text-center">
-                            <h1>Update Course Panel</h1>
-                        </header>
-                        <div className="createCourseForm-wrapper">
-                            <form action="">
-                                <div className="mb-normal">
-                                    <label htmlFor="title">Title</label>
-                                    <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} />
-                                </div>
-                                <div className="mb-normal">
-                                    <label htmlFor="description">Description</label>
-                                    <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description} />
-                                </div>
-                                <div className="mb-normal">
-                                    <label htmlFor="image-url">Image Url</label>
-                                    <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl} />
-                                </div>
-                                <div className="mb-large d-flex jc-between">
-                                    <div>
-                                        <label htmlFor="price">Price</label>
-                                        <br />
-                                        <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price} />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="published">Published</label>
-                                        <br />
-                                        <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
-                                            <option value="true">True</option>
-                                            <option value="false">False</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button type="submit" onClick={e => validateFormAndUpdateCourse(e)}>Update Course</button>
-                                </div>
-                            </form>
+        <section className="createCourse-section" style={{backgroundColor: "white", 
+                                                          minHeight: "28rem", 
+                                                          maxWidth: "32rem", 
+                                                          alignSelf: "flex-end",
+                                                          border: "0 solid white",
+                                                          boxShadow: "0 0 10px 2px rgba(0, 0, 0, 0.1)"}}>
+            <header className="text-center">
+                <h1>Update Course Panel</h1>
+            </header>
+            <div className="createCourseForm-wrapper">
+                <form action="">
+                    <div className="mb-normal">
+                        <label htmlFor="title">Title</label>
+                        <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} />
+                    </div>
+                    <div className="mb-normal">
+                        <label htmlFor="description">Description</label>
+                        <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description} />
+                    </div>
+                    <div className="mb-normal">
+                        <label htmlFor="image-url">Image Url</label>
+                        <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl} />
+                    </div>
+                    <div className="mb-large d-flex jc-between">
+                        <div>
+                            <label htmlFor="price">Price</label>
+                            <br />
+                            <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price} />
                         </div>
-                    </section>
-                </main>
-            )}
-        </>
-    );
+                        <div>
+                            <label htmlFor="published">Published</label>
+                            <br />
+                            <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" onClick={e => validateFormAndUpdateCourse(e)}>Update Course</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    )
+}
 
+function CourseCard({ courseInfo }) {
+    return (
+        <section className="course-card mb-large-normal" style={{backgroundColor: "white", height: "24rem", maxWidth: "25rem"}}>
+            <div>
+                <img src={courseInfo.imageLink} alt="" className="course-img"/>
+            </div>
+            <div style={{padding: "1rem 2rem"}}>
+                <div className="mb-small fs-normal">{courseInfo.title}</div>
+                <div>{courseInfo.description}</div>
+            </div>
+            <div className="ele-center fs-large">Rs {courseInfo.price}</div>
+        </section>
+    )
 }
 
 export default UpdateCourse;

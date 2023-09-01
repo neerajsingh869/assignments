@@ -218,3 +218,12 @@ section.course-card {
 .publish-btn {
     background-color: lightgreen;
 }
+
+/*  */
+.form-course-wrapper {
+    width: 95vw;
+    height: 70vh;
+    margin: auto;
+    margin-top: -25vh;
+    justify-content:space-around;
+}

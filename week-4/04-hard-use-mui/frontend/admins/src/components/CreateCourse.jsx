@@ -95,9 +95,6 @@ function CreateCourse(props) {
         e.preventDefault();
 
         let {isFormValid, alertMsg} = formValidation();
-        console.log(title, description, imageUrl, price, published);
-        console.log(typeof(price));
-        console.log(typeof(published));
         if(!isFormValid) {
             window.alert(alertMsg);
         } else {

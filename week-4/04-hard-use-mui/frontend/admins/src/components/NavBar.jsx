@@ -2,14 +2,12 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import "./styles.css";
 
-function NavBar(props) {
+function NavBar({ isAdminLoggedIn, handleIsAdminLoggedIn }) {
 
     // simple method to logout user by removing jwt token
     function logoutUser() {
-        console.log("user logged out");
         localStorage.removeItem('admin-token');
-        props.handleIsAdminLoggedIn(false);
-        console.log(localStorage);
+        handleIsAdminLoggedIn(false);
     }
 
     return (
@@ -21,7 +19,7 @@ function NavBar(props) {
                     </h1>
                 </div>
                 <ul className="d-flex eleV-center">
-                    {props.isAdminLoggedIn ? (
+                    {isAdminLoggedIn ? (
                         <>
                             <li>
                                 <Link to="/about" className="nav-link">Create Course</Link>
