@@ -4,7 +4,7 @@ const Course = require('../models/course');
 const { SECRET } = require('../middlewares/auth');
 
 const getMyInfo = async (req, res) => {
-    const admin = await Admin.findOne({ username: req.user.usernmae });
+    const admin = await Admin.findOne({ username: req.user.username });
     if (admin) {
         res.json({ username: admin.username });
     } else {
