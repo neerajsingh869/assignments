@@ -1,14 +1,15 @@
 import React from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import Loading from './Loading';
 
 function UpdateCourse({ handleIsAdminLoggedIn }) {
     let navigate = useNavigate();
-    // get courseId
+
     const { courseId } = useParams();
 
     const [course, setCourse] = React.useState(null);
-
+    
     React.useEffect(() => {
         async function fetchCourse() {
             try {
@@ -34,18 +35,17 @@ function UpdateCourse({ handleIsAdminLoggedIn }) {
         fetchCourse();
     }, []);
 
-    console.log(courseId);
+    if(!course) {
+        return <Loading />
+    }
+
     return (
         <main>
-            {course && (
-                <>
-                    <Header />
-                    <div className="d-flex form-course-wrapper">
-                        <UpdateForm course={course} setCourse={setCourse} handleIsAdminLoggedIn={handleIsAdminLoggedIn}/>
-                        <CourseCard courseInfo={course} />
-                    </div>
-                </>
-            ) }
+            <Header />
+            <div className="d-flex form-course-wrapper">
+                <UpdateForm course={course} setCourse={setCourse} handleIsAdminLoggedIn={handleIsAdminLoggedIn}/>
+                <CourseCard courseInfo={course} />
+            </div>
         </main>
     )
 }
@@ -59,6 +59,7 @@ function Header() {
 };
 
 function UpdateForm({ course, setCourse, handleIsAdminLoggedIn }) {
+    let navigate = useNavigate();
     const [id, setId] = React.useState(course._id);
     const [title, setTitle] = React.useState(course.title);
     const [description, setDescription] = React.useState(course.description);
