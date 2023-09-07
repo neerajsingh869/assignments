@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./styles.css"
 
-function ShowCourses({ handleIsAdminLoggedIn }) {
+function ShowCourses() {
     const navigate = useNavigate();
 
     const [courses, setCourses] = React.useState([]);
@@ -25,8 +25,7 @@ function ShowCourses({ handleIsAdminLoggedIn }) {
                 console.log(err);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    handleIsAdminLoggedIn(false);
-                    navigate('/login')
+                    window.location = '/login';
                 }
                 else{
                     window.alert("Something went wrongs. Please see the logs");

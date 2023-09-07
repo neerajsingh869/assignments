@@ -1,13 +1,38 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
 import "./styles.css";
 
 function NavBar({ isAdminLoggedIn, handleIsAdminLoggedIn }) {
+    const navigate = useNavigate();
+
+    const [userEmail, setUserEmail] = React.useState(null);
+
+    React.useEffect(() => {
+        console.log("hi from navbar");
+        async function init() {
+            try {
+                const response = await axios.get(`http://localhost:3000/admin/me`, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('admin-token')
+                    }
+                });
+                console.log(response.data);
+                if (response.data.username) {
+                    setUserEmail(response.data.username);
+                }
+            } catch (err) {
+                console.log(err.response);
+            }
+        }
+
+        init();
+    }, []);
 
     // simple method to logout user by removing jwt token
     function logoutUser() {
         localStorage.removeItem('admin-token');
-        handleIsAdminLoggedIn(false);
+        window.location = '/';
     }
 
     return (
@@ -19,7 +44,7 @@ function NavBar({ isAdminLoggedIn, handleIsAdminLoggedIn }) {
                     </h1>
                 </div>
                 <ul className="d-flex eleV-center">
-                    {isAdminLoggedIn ? (
+                    {userEmail ? (
                         <>
                             <li>
                                 <Link to="/about" className="nav-link">Create Course</Link>

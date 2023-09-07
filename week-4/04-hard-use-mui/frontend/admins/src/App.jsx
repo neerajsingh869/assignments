@@ -13,26 +13,18 @@ import NavBar from './components/NavBar';
 // based on the route.
 // You can also try going to /random and see what happens (a route that doesnt exist)
 function App() {
-    const [isAdminLoggedIn, setIsAdminLoggedIn] = React.useState(
-        localStorage.getItem('admin-token') || false
-    );
-
-    // find initial state of isAdminLoggedInState
-    React.useEffect(() => {
-        console.log("someone changed isAdminLoggedIn state");
-    }, [isAdminLoggedIn]);
-
+    
     return (
         <>  
             <Router>
-                <NavBar isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />
+                <NavBar />
                 <Routes>
                     <Route path="/" element={<Landing />} />
-                    <Route path="/login" element={<Login handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
+                    <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/about" element={<CreateCourse isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
-                    <Route path="/update/:courseId" element={<UpdateCourse isAdminLoggedIn={isAdminLoggedIn} handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
-                    <Route path="/courses" element={<ShowCourses handleIsAdminLoggedIn={setIsAdminLoggedIn} />} />
+                    <Route path="/about" element={<CreateCourse />} />
+                    <Route path="/update/:courseId" element={<UpdateCourse />} />
+                    <Route path="/courses" element={<ShowCourses />} />
                 </Routes>
             </Router>
         </>

@@ -41,7 +41,7 @@ function UpdateCourse({ handleIsAdminLoggedIn }) {
 
     return (
         <main>
-            <Header />
+            <Header title={course.title} />
             <div className="d-flex form-course-wrapper">
                 <UpdateForm course={course} setCourse={setCourse} handleIsAdminLoggedIn={handleIsAdminLoggedIn}/>
                 <CourseCard courseInfo={course} />
@@ -50,10 +50,12 @@ function UpdateCourse({ handleIsAdminLoggedIn }) {
     )
 }
 
-function Header() {
+function Header({ title }) {
     return (
         <div style={{width: "100vw", height: "40vh", backgroundColor: "grey"}}>
-
+            <h1 style={{display: "flex", justifyContent: "center", paddingTop: "2.5rem", color: "#2d0080"}}>
+                { title }
+            </h1>
         </div>
     )
 };

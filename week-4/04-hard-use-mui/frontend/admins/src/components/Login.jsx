@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import LoginOrRegisterForm from "./LoginOrRegisterForm";
 import "./styles.css";
 
-function Login({ handleIsAdminLoggedIn }) {
+function Login() {
 
     return (
         <main className="ele-center">
@@ -11,8 +11,7 @@ function Login({ handleIsAdminLoggedIn }) {
                 <header className="text-center">
                     <h1>Login to admin dashboard</h1>
                 </header>
-                <LoginOrRegisterForm formName={"Login"}
-                                handleIsAdminLoggedIn={handleIsAdminLoggedIn}/>
+                <LoginOrRegisterForm formName={"Login"} />
                 <div className="text-center fs-medium">
                     <p>
                         Don't have an account? &nbsp;
