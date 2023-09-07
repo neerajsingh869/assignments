@@ -3,6 +3,15 @@ const Admin = require('../models/admin');
 const Course = require('../models/course');
 const { SECRET } = require('../middlewares/auth');
 
+const getMyInfo = async (req, res) => {
+    const admin = await Admin.findOne({ username: req.user.usernmae });
+    if (admin) {
+        res.json({ username: admin.username });
+    } else {
+        res.status(403).json({ message: 'Admin doesnt exist' });
+    }
+}
+
 const signup = async (req, res) => {
     let { username, password } = req.body;
     const admin = await Admin.findOne({ username });
@@ -53,6 +62,7 @@ const getCourse = async (req, res) => {
 };
 
 module.exports = {
+    getMyInfo,
     signup, 
     login, 
     createCourse,

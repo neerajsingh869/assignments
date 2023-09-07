@@ -7,6 +7,7 @@ const adminController = require('../controllers/admin-controller');
 const router = express.Router();
 
 // define all admin routes
+router.get('/me', authenticateJwt, adminController.getMyInfo);
 router.post('/signup', adminController.signup);
 router.post('/login', adminController.login);
 router.post('/courses', authenticateJwt, adminController.createCourse);
