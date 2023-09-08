@@ -9,7 +9,7 @@ function ShowCourses() {
 
     const [courses, setCourses] = React.useState([]);
     const [pubOrUnpubBtn, setPubOrUnpubBtn] = React.useState(false);
-
+    console.log("hello");
     // Add code to fetch courses from the server
     // and set it in the courses state variable.
     React.useEffect(() => {
@@ -25,7 +25,7 @@ function ShowCourses() {
                 console.log(err);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    window.location = '/login';
+                    navigate('/login');
                 }
                 else{
                     window.alert("Something went wrongs. Please see the logs");
@@ -65,7 +65,6 @@ function ShowCourses() {
             console.log(err);
             if(err.response.status === 403){
                 window.alert("Your session ended. Please login again");
-                handleIsAdminLoggedIn(false);
                 navigate('/login')
             }
             else{

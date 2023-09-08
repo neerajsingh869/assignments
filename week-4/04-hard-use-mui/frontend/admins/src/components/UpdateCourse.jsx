@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Loading from './Loading';
 
-function UpdateCourse({ handleIsAdminLoggedIn }) {
+function UpdateCourse() {
     let navigate = useNavigate();
 
     const { courseId } = useParams();
@@ -23,7 +23,6 @@ function UpdateCourse({ handleIsAdminLoggedIn }) {
                 console.log(err);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    handleIsAdminLoggedIn(false);
                     navigate('/login')
                 }
                 else{
@@ -43,7 +42,7 @@ function UpdateCourse({ handleIsAdminLoggedIn }) {
         <main>
             <Header title={course.title} />
             <div className="d-flex form-course-wrapper">
-                <UpdateForm course={course} setCourse={setCourse} handleIsAdminLoggedIn={handleIsAdminLoggedIn}/>
+                <UpdateForm course={course} setCourse={setCourse} />
                 <CourseCard courseInfo={course} />
             </div>
         </main>
@@ -60,7 +59,7 @@ function Header({ title }) {
     )
 };
 
-function UpdateForm({ course, setCourse, handleIsAdminLoggedIn }) {
+function UpdateForm({ course, setCourse }) {
     let navigate = useNavigate();
     const [id, setId] = React.useState(course._id);
     const [title, setTitle] = React.useState(course.title);
@@ -172,7 +171,6 @@ function UpdateForm({ course, setCourse, handleIsAdminLoggedIn }) {
             } catch (err) {
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    handleIsAdminLoggedIn(false);
                     navigate('/login');
                 }
                 else{

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
-function LoginOrRegisterForm({ formName }) {
+function LoginOrRegisterForm({ formName, setUserEmail }) {
 
     let navigate = useNavigate();
 
@@ -35,8 +35,10 @@ function LoginOrRegisterForm({ formName }) {
                     }
                 });
                 localStorage.setItem('admin-token', response.data.token);
+                console.log(username);
                 window.alert(response.data.message); 
-                window.location = '/courses';
+                navigate('/courses');
+                setUserEmail(username);
             } catch (err) {
                 console.log(err);
                 window.alert(err.response.data.message);
@@ -49,7 +51,7 @@ function LoginOrRegisterForm({ formName }) {
                     password
                 });
                 window.alert(response.data.message);
-                window.location = '/login';
+                navigate('/login');
             } catch (err) {
                 window.alert(err.response.data.message);
                 console.log(err.response.data);

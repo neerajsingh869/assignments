@@ -104,14 +104,13 @@ function CreateCourse() {
                     }
                 }); 
                 window.alert(response.data.message);
-                window.location = '/courses';
+                navigate('/courses');
             } catch (err) {
                 console.log("what is error");
                 console.log(err);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    props.handleIsAdminLoggedIn(false);
-                    window.location = '/login';
+                    navigate('/login');
                 }
                 else{
                     window.alert("Something went wrong. Please see the logs");
