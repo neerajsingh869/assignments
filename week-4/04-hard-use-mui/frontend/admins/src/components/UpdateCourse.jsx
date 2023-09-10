@@ -255,23 +255,64 @@ function UpdateForm() {
 function CourseCard() {
 
     console.log("Update course Card component re-renders");
-    const courseImg = useRecoilValue(courseImgState);
-    const courseTitle = useRecoilValue(courseTitleState);
-    const courseDesc = useRecoilValue(courseDescriptionState);
-    const coursePrice = useRecoilValue(coursePriceState);
 
     return (
         <section className="course-card mb-large-normal" style={{backgroundColor: "white", height: "24rem", maxWidth: "25rem"}}>
             <div>
-                <img src={courseImg} alt="" className="course-img"/>
+                <CourseCardImage />
             </div>
             <div style={{padding: "1rem 2rem"}}>
-                <div className="mb-small fs-normal">{courseTitle}</div>
-                <div>{courseDesc}</div>
+                <CourseCardTitle /> 
+                <CourseCardDescription />
             </div>
-            <div className="ele-center fs-large">Rs {coursePrice}</div>
+            <CourseCardPrice />
         </section>
     )
 }
+
+function CourseCardImage() {
+
+    console.log("Update course Card Image component re-renders");
+    const courseImg = useRecoilValue(courseImgState);
+
+    return (
+        <div>
+            <img src={courseImg} alt="" className="course-img"/>
+        </div>
+    )
+}
+
+function CourseCardTitle() {
+
+    console.log("Update course Card Title component re-renders");
+    const courseTitle = useRecoilValue(courseTitleState);
+
+    return (
+        <div className="mb-small fs-normal">
+            {courseTitle}
+        </div>
+    )
+}
+
+function CourseCardDescription() {
+
+    console.log("Update course Card Description component re-renders");
+    const courseDesc = useRecoilValue(courseDescriptionState);
+    
+    return (
+        <div>{courseDesc}</div>
+    )
+}
+
+function CourseCardPrice() {
+
+    console.log("Update course Card Price component re-renders");
+    const coursePrice = useRecoilValue(coursePriceState);
+    
+    return (
+        <div className="ele-center fs-large">Rs {coursePrice}</div>
+    )
+}
+
 
 export default UpdateCourse;
