@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import LoginOrRegisterForm from "./LoginOrRegisterForm";
 import "./styles.css";
 
-function Login({ setUserEmail }) {
+function Login() {
+
+    console.log("Login component re-renders");
 
     return (
         <main className="ele-center">
@@ -11,7 +13,7 @@ function Login({ setUserEmail }) {
                 <header className="text-center">
                     <h1>Login to admin dashboard</h1>
                 </header>
-                <LoginOrRegisterForm formName={"Login"} setUserEmail={setUserEmail} />
+                <LoginOrRegisterForm formName={"Login"} />
                 <div className="text-center fs-medium">
                     <p>
                         Don't have an account? &nbsp;

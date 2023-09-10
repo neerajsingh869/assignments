@@ -8,6 +8,8 @@ import "./styles.css"
 function CreateCourse() {
     let navigate = useNavigate();
 
+    console.log("Create course component re-renders");
+
     const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [imageUrl, setImageUrl] = React.useState("");

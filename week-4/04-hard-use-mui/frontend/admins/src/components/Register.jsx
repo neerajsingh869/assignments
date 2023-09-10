@@ -5,6 +5,8 @@ import "./styles.css";
 
 function Register() {
 
+    console.log("Register component re-renders");
+
     return (
         <main className="ele-center">
             <section className="loginReg-section">

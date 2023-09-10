@@ -8,14 +8,36 @@ import Register from './components/Register';
 import ShowCourses from './components/ShowCourses';
 import UpdateCourse from './components/UpdateCourse';
 import NavBar from './components/NavBar';
+import { RecoilRoot, useSetRecoilState } from "recoil";
+import { userState } from "./store/atoms/user";
 
 // This file shows how you can do routing in React.
 // Try going to /login, /register, /about, /courses on the website and see how the html changes
 // based on the route.
 // You can also try going to /random and see what happens (a route that doesnt exist)
 function App() {
+    
+    return (
+        <RecoilRoot>  
+            <Router>
+                <NavBar />
+                <InitUser />
+                <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/about" element={<CreateCourse />} />
+                    <Route path="/update/:courseId" element={<UpdateCourse />} />
+                    <Route path="/courses" element={<ShowCourses />} />
+                </Routes>
+            </Router>
+        </RecoilRoot>
+    );
 
-    const [userEmail, setUserEmail] = React.useState(null);
+}
+
+function InitUser() {
+    const setUser = useSetRecoilState(userState);
 
     React.useEffect(() => {
         async function init() {
@@ -27,32 +49,31 @@ function App() {
                 }); 
                 console.log("Response data from app : " + response.data);
                 if (response.data.username) {
-                    setUserEmail(response.data.username);
+                    setUser({
+                        isLoading: false,
+                        userEmail: response.data.username
+                    })
+                } else {
+                    setUser({
+                        isLoading: false,
+                        userEmail: null
+                    })
                 }
             } catch (err) {
                 console.log(err.response);
+                setUser({
+                    isLoading: false,
+                    userEmail: null
+                })
             }
         }
 
         init();
     }, []);
-    
-    return (
-        <>  
-            <Router>
-                <NavBar userEmail={userEmail} setUserEmail={setUserEmail} />
-                <Routes>
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/login" element={<Login setUserEmail={setUserEmail} />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/about" element={<CreateCourse />} />
-                    <Route path="/update/:courseId" element={<UpdateCourse />} />
-                    <Route path="/courses" element={<ShowCourses />} />
-                </Routes>
-            </Router>
-        </>
-    );
 
+    console.log("App component re-renders");
+
+    return <></>;
 }
 
 export default App;

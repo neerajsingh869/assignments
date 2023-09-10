@@ -2,10 +2,16 @@ import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../store/atoms/user";
 
-function LoginOrRegisterForm({ formName, setUserEmail }) {
+function LoginOrRegisterForm({ formName }) {
 
     let navigate = useNavigate();
+
+    const setUser = useSetRecoilState(userState);
+
+    console.log("login or register form componet re-renders");
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -38,11 +44,18 @@ function LoginOrRegisterForm({ formName, setUserEmail }) {
                 console.log(username);
                 window.alert(response.data.message); 
                 navigate('/courses');
-                setUserEmail(username);
+                setUser({
+                    isLoading: false,
+                    userEmail: username
+                });
             } catch (err) {
                 console.log(err);
                 window.alert(err.response.data.message);
                 localStorage.removeItem('admin-token');
+                setUser({
+                    isLoading: false,
+                    userEmail: null
+                });
             }
         } else {
             try {

@@ -2,13 +2,20 @@ import React from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Loading from './Loading';
+import { courseState } from '../store/atoms/course';
+import { isCourseLoadingState, courseTitleState, courseDescriptionState, coursePriceState, courseImgState, courseDetailsState } from '../store/selectors/course';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 function UpdateCourse() {
     let navigate = useNavigate();
 
-    const { courseId } = useParams();
+    console.log("Update course component re-renders");
 
-    const [course, setCourse] = React.useState(null);
+    const { courseId } = useParams();
+    console.log(courseId);
+
+    const setCourse = useSetRecoilState(courseState);
+    const isCourseLoading = useRecoilValue(isCourseLoadingState);
     
     React.useEffect(() => {
         async function fetchCourse() {
@@ -18,9 +25,12 @@ function UpdateCourse() {
                         Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                     }
                 });
-                setCourse(response.data.course);
+                setCourse({
+                    isLoading: false,
+                    course: response.data.course
+                });
             } catch (err) {
-                console.log(err);
+                console.log(err.response);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
                     navigate('/login')
@@ -29,44 +39,54 @@ function UpdateCourse() {
                     window.alert("Something went wrongs. Please see the logs");
                     console.log(err.response);
                 }
+                setCourse({
+                    isLoading: false,
+                    course: null
+                });
             }
         }
         fetchCourse();
     }, []);
 
-    if(!course) {
+    if(isCourseLoading) {
         return <Loading />
     }
 
     return (
         <main>
-            <Header title={course.title} />
+            <Header />
             <div className="d-flex form-course-wrapper">
-                <UpdateForm course={course} setCourse={setCourse} />
-                <CourseCard courseInfo={course} />
+                <UpdateForm />
+                <CourseCard />
             </div>
         </main>
     )
 }
 
-function Header({ title }) {
+function Header() {
+    console.log("Update course Header component re-renders");
+    const courseTitle = useRecoilValue(courseTitleState);
+
     return (
         <div style={{width: "100vw", height: "40vh", backgroundColor: "grey"}}>
             <h1 style={{display: "flex", justifyContent: "center", paddingTop: "2.5rem", color: "#2d0080"}}>
-                { title }
+                { courseTitle }
             </h1>
         </div>
     )
 };
 
-function UpdateForm({ course, setCourse }) {
+function UpdateForm() {
     let navigate = useNavigate();
-    const [id, setId] = React.useState(course._id);
-    const [title, setTitle] = React.useState(course.title);
-    const [description, setDescription] = React.useState(course.description);
-    const [imageUrl, setImageUrl] = React.useState(course.imageLink);
-    const [price, setPrice] = React.useState(course.price);
-    const [published, setPublished] = React.useState(course.published);
+
+    console.log("Update course form component re-renders");
+    const [courseDetails, setCourse] = useRecoilState(courseState);
+
+    const [title, setTitle] = React.useState(courseDetails.course.title);
+    const [description, setDescription] = React.useState(courseDetails.course.description);
+    const [imageUrl, setImageUrl] = React.useState(courseDetails.course.imageLink);
+    const [price, setPrice] = React.useState(courseDetails.course.price);
+    const [published, setPublished] = React.useState(courseDetails.course.published);
 
     function formValidation() {
         let isFormValid = true;
@@ -146,11 +166,11 @@ function UpdateForm({ course, setCourse }) {
             window.alert(alertMsg);
         } else {
             try {
-                let updateCourseUrl = `http://localhost:3000/admin/courses/${id}`;
+                let updateCourseUrl = `http://localhost:3000/admin/courses/${courseDetails.course._id}`;
                 await axios.put(updateCourseUrl, {
                     title: title,
                     description: description,
-                    imageUrl: imageUrl,
+                    imageLink: imageUrl,
                     price: Number(price),
                     published: (published === "true"),
                     'HTTP_CONTENT_LANGUAGE': self.language
@@ -160,14 +180,17 @@ function UpdateForm({ course, setCourse }) {
                     }
                 }); 
                 let updatedCourse = {
-                    _id: id,
+                    _id: courseDetails.course._id,
                     title: title,
                     description: description,
                     imageLink: imageUrl,
                     price: Number(price),
                     published: published === "true"
                 }
-                setCourse(updatedCourse);
+                setCourse({
+                    isLoading: false,
+                    course: updatedCourse
+                });
             } catch (err) {
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
@@ -229,17 +252,24 @@ function UpdateForm({ course, setCourse }) {
     )
 }
 
-function CourseCard({ courseInfo }) {
+function CourseCard() {
+
+    console.log("Update course Card component re-renders");
+    const courseImg = useRecoilValue(courseImgState);
+    const courseTitle = useRecoilValue(courseTitleState);
+    const courseDesc = useRecoilValue(courseDescriptionState);
+    const coursePrice = useRecoilValue(coursePriceState);
+
     return (
         <section className="course-card mb-large-normal" style={{backgroundColor: "white", height: "24rem", maxWidth: "25rem"}}>
             <div>
-                <img src={courseInfo.imageLink} alt="" className="course-img"/>
+                <img src={courseImg} alt="" className="course-img"/>
             </div>
             <div style={{padding: "1rem 2rem"}}>
-                <div className="mb-small fs-normal">{courseInfo.title}</div>
-                <div>{courseInfo.description}</div>
+                <div className="mb-small fs-normal">{courseTitle}</div>
+                <div>{courseDesc}</div>
             </div>
-            <div className="ele-center fs-large">Rs {courseInfo.price}</div>
+            <div className="ele-center fs-large">Rs {coursePrice}</div>
         </section>
     )
 }

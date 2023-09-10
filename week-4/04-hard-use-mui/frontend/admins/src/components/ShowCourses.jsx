@@ -7,6 +7,8 @@ import "./styles.css"
 function ShowCourses() {
     const navigate = useNavigate();
 
+    console.log("Show course component re-renders");
+
     const [courses, setCourses] = React.useState([]);
     const [pubOrUnpubBtn, setPubOrUnpubBtn] = React.useState(false);
     console.log("hello");

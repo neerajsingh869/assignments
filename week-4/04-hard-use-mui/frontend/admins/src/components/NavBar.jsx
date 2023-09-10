@@ -1,19 +1,43 @@
 import React from "react";
 import axios from "axios";
+import Loading from "./Loading";
 import { Link, useNavigate } from 'react-router-dom';
 import "./styles.css";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userState } from "../store/atoms/user";
+import { userEmailState, isUserLoadingState } from "../store/selectors/user";
 
-function NavBar({ userEmail, setUserEmail }) {
+function NavBar() {
     const navigate = useNavigate();
+
+    // navbar component is subscribed to userState atom
+    const userEmail = useRecoilValue(userEmailState);
+    const setUser = useSetRecoilState(userState);
+    const userLoading = useRecoilValue(isUserLoadingState);
 
     // simple method to logout user by removing jwt token
     function logoutUser() {
         localStorage.removeItem('admin-token');
-        setUserEmail(null);
+        setUser({
+            isLoading: false,
+            userEmail: null
+        })
         navigate('/');
     }
 
     console.log("userEmail val in navbar : " + userEmail);
+
+    console.log("userLoading val in navbar : " + userLoading);
+
+    console.log("Navbar component re-renders");
+
+    if (userLoading) {
+        return (
+            <>
+                <Loading />
+            </>
+        )
+    }
 
     return (
         <header className="nav-header eleV-center">
