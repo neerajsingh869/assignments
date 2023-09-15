@@ -13,6 +13,7 @@ import "./styles.css";
 
 function Register() {
     let navigate = useNavigate();
+    console.log("Register page re-renders");
 
     const [ userEmail, setUserEmail ] = React.useState("");
     const [ password, setPassword ] = React.useState("");

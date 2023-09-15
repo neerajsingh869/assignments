@@ -8,10 +8,12 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./styles.css";
 
-function Login() {
+function Login({ setUserEmailState }) {
+    const navigate = useNavigate();
+    console.log("Login page re-renders");
 
     const [ userEmail, setUserEmail ] = React.useState("");
     const [ password, setPassword ] = React.useState("");
@@ -32,7 +34,8 @@ function Login() {
             
             localStorage.setItem('token', JSON.stringify(response.data.token));
             window.alert(response.data.message);
-            window.location = '/courses';
+            setUserEmailState(userEmail);
+            navigate('/courses');
         } catch (error) {
             console.log(error.stack);
             if (error.response.status === 403) {

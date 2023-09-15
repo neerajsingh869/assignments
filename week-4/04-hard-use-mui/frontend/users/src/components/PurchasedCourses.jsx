@@ -15,6 +15,7 @@ import "./styles.css";
 
 function PurchasedCourses() {
     const navigate = useNavigate();
+    console.log("Purchased courses page re-renders");
 
     const [ purchasedCourses, setPurchasedCourses ] = React.useState(null);
 

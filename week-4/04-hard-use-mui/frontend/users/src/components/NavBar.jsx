@@ -7,30 +7,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router-dom';
 
-function NavBar() {
+function NavBar({ userEmail, setUserEmailState }) {
     const navigate = useNavigate();
-
-    const [ userEmail, setUserEmail ] = React.useState(null);
-
-    React.useEffect(() => {
-         const init = async () => {
-            try {
-                let response = await axios.get('http://localhost:3000/users/me', {
-                    headers: {
-                        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token'))
-                    }
-                });
-                console.log(response);
-                if (response.data.username) {
-                    setUserEmail(response.data.username);
-                }
-            } catch (error) {
-                console.log(error.stack);
-            }
-        }
-
-        init();
-    }, []);
+    console.log("Navbar page re-renders");
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -78,7 +57,7 @@ function NavBar() {
                                     sx={{ fontWeight: "bold" }}
                                     onClick={ () => {
                                         localStorage.removeItem('token');
-                                        setUserEmail(null);
+                                        setUserEmailState(null);
                                         navigate('/');
                                     } }>
                                 Logout

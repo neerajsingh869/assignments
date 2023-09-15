@@ -15,6 +15,7 @@ import "./styles.css";
 
 function PurchaseCourse() {
     let { courseId } = useParams();
+    console.log("Purchased course page re-renders");
     console.log(courseId);
 
     let [ course, setCourse ] = React.useState(null);

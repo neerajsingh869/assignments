@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import "./styles.css";
 
 function Landing() {
+    console.log("Landing page re-renders");
 
     return (
         <Box component="main" className="outer-container">
