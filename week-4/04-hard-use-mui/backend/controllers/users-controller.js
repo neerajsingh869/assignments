@@ -3,6 +3,15 @@ const User = require('../models/user');
 const Course = require('../models/course');
 const { SECRET } = require('../middlewares/auth');
 
+const getMyInfo = async (req, res) => {
+    const user = await User.findOne({ username: req.user.username });
+    if (user) {
+        res.json({ username: user.username });
+    } else {
+        res.status(403).json({ message: 'User doesnt exist' });
+    }
+}
+
 const signup = async (req, res) => {
     let { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -32,6 +41,15 @@ const getCourses = async (req, res) => {
     res.json({ courses });
 };
 
+const getCourseInfo = async (req, res) => {
+    const course = await Course.findById(req.params.courseId);
+    if (course) {
+        res.json({ course })
+    } else {
+        res.status(404).json({ message: 'Course not found' });
+    }
+};
+
 const purchaseCourse = async (req, res) => {
     const course = await Course.findById(req.params.courseId);
     if (course) {
@@ -58,9 +76,11 @@ const getPurchasedCourses = async (req, res) => {
 };
 
 module.exports = {
+    getMyInfo,
     signup,
     login,
     getCourses,
+    getCourseInfo,
     purchaseCourse,
     getPurchasedCourses
 }
