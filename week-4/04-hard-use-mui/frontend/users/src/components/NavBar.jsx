@@ -5,11 +5,18 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userState } from '../store/atoms/user';
+import { userEmailState } from '../store/selectors/user';
 
-function NavBar({ userEmail, setUserEmailState }) {
+function NavBar() {
     const navigate = useNavigate();
     console.log("Navbar page re-renders");
+
+    const userEmail = useRecoilValue(userEmailState);
+    const setUser = useSetRecoilState(userState);
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -57,7 +64,10 @@ function NavBar({ userEmail, setUserEmailState }) {
                                     sx={{ fontWeight: "bold" }}
                                     onClick={ () => {
                                         localStorage.removeItem('token');
-                                        setUserEmailState(null);
+                                        setUser({
+                                            userEmail: null
+                                        });
+                                        console.log("User state changed from navbar.jsx");
                                         navigate('/');
                                     } }>
                                 Logout
