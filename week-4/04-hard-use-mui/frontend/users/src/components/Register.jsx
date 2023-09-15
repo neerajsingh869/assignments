@@ -8,10 +8,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./styles.css";
 
 function Register() {
+    let navigate = useNavigate();
 
     const [ userEmail, setUserEmail ] = React.useState("");
     const [ password, setPassword ] = React.useState("");
@@ -26,7 +27,7 @@ function Register() {
                 password: password
             });
             window.alert(response.data.message);
-            window.location = '/login';
+            navigate('/login');
         } catch (error) {
             console.log(error.stack);
             if (error.response.status === 403) {

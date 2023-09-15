@@ -5,9 +5,10 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function NavBar() {
+    const navigate = useNavigate();
 
     const [ userEmail, setUserEmail ] = React.useState(null);
 
@@ -45,14 +46,14 @@ function NavBar() {
                             <Button color="inherit" 
                                     sx={{ fontWeight: "bold" }}
                                     onClick={ () => {
-                                        window.location = '/login';
+                                        navigate('/login');
                                     } }>
                                 Login
                             </Button>
                             <Button color="inherit" 
                                     sx={{ fontWeight: "bold" }}
                                     onClick={ () => {
-                                        window.location = '/register';
+                                        navigate('/register');
                                     } }>
                                 Register
                             </Button>   
@@ -62,14 +63,14 @@ function NavBar() {
                             <Button color="inherit" 
                                     sx={{ fontWeight: "bold" }}
                                     onClick={ () => {
-                                        window.location = '/courses';
+                                        navigate('/courses');
                                     } }>
                                 Courses
                             </Button>
                             <Button color="inherit" 
                                     sx={{ fontWeight: "bold" }}
                                     onClick={ () => {
-                                        window.location = '/courses/purchases';
+                                        navigate('/courses/purchases');
                                     } }>
                                 Purchases
                             </Button>   
@@ -78,7 +79,7 @@ function NavBar() {
                                     onClick={ () => {
                                         localStorage.removeItem('token');
                                         setUserEmail(null);
-                                        window.location = '/';
+                                        navigate('/');
                                     } }>
                                 Logout
                             </Button> 

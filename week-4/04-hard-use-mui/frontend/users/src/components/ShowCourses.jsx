@@ -10,10 +10,11 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./styles.css";
 
 function ShowCourses() {
+    const navigate = useNavigate();
 
     const [ courses, setCourses ] = React.useState(null);
 
@@ -33,7 +34,7 @@ function ShowCourses() {
                 console.log(error.stack);
                 if (error.response.status === 403) {
                     window.alert("Session has ended. Please login again");
-                    window.location = '/login';
+                    navigate('/login');
                 }
             }
         };
@@ -75,6 +76,7 @@ function ShowCourses() {
 }
 
 function CourseCard({ course }) {
+    const navigate = useNavigate();
 
     return (
         <>
@@ -112,7 +114,7 @@ function CourseCard({ course }) {
                                         size="large" 
                                         sx={{ borderRadius: "8px" }}
                                         onClick={ () => {
-                                            window.location = `/courses/${course._id}`;
+                                            navigate(`/courses/${course._id}`);
                                         } }>
                                     Buy Now
                                 </Button>

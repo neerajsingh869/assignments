@@ -10,9 +10,11 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
 import "./styles.css";
 
 function PurchasedCourses() {
+    const navigate = useNavigate();
 
     const [ purchasedCourses, setPurchasedCourses ] = React.useState(null);
 
@@ -33,7 +35,7 @@ function PurchasedCourses() {
                 console.log(error.stack);
                 if (error.response.status === 403) {
                     window.alert("Session has ended. Please login again");
-                    window.location = '/login';
+                    navigate('/login');
                 }
             }
         };
