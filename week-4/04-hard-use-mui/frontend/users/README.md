@@ -5,7 +5,7 @@ Routes should be very similar to the old ones, but now you need to add a new rou
 You need to create the boilerplate yourself using vite
 
 Frontend Routes expected - 
-1. /courses - shows all courses
+1. /courses - shows all published courses
 2. /courses/purchased - Shows all purchased courses
 3. /courses/:id - Shows a single course, allows user to purchase it
 4. /login - login page
