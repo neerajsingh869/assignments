@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -12,9 +13,26 @@ import "./styles.css";
 
 function Register() {
 
-    const handleSubmit = (event) => {
+    const [ userEmail, setUserEmail ] = React.useState("");
+    const [ password, setPassword ] = React.useState("");
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("heelo");
+        console.log(userEmail, password);
+
+        try {
+            let response = await axios.post("http://localhost:3000/users/signup", {
+                username: userEmail, 
+                password: password
+            });
+            window.alert(response.data.message);
+            window.location = '/login';
+        } catch (error) {
+            console.log(error.stack);
+            if (error.response.status === 403) {
+                window.alert(error.response.data.message);
+            }
+        }
     }
 
     return (
@@ -43,6 +61,7 @@ function Register() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={ (event) => setUserEmail(event.target.value) }
                     />
                     <TextField
                         margin="normal"
@@ -53,6 +72,7 @@ function Register() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={ (event) => setPassword(event.target.value) }
                     />
                     <Button
                         type="submit"

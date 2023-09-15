@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -8,10 +9,45 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Link, useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from 'react-router-dom';
 import "./styles.css";
 
 function ShowCourses() {
+
+    const [ courses, setCourses ] = React.useState(null);
+
+    React.useEffect(() => {
+        const getCourses = async () => {
+            try {
+                let response = await axios.get('http://localhost:3000/users/courses', {
+                    headers: {
+                        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token'))
+                    }
+                });
+                console.log(response.data);
+                if (response.data.courses) {
+                    setCourses(response.data.courses);
+                }
+            } catch (error) {
+                console.log(error.stack);
+                if (error.response.status === 403) {
+                    window.alert("Session has ended. Please login again");
+                    window.location = '/login';
+                }
+            }
+        };
+
+        getCourses();
+    }, []);
+
+    if (!courses) {
+        return (
+            <Box className="outer-container">
+                <CircularProgress />
+            </Box>
+        )
+    }
 
     return (
         <Container component="main" maxWidth="xl" sx={{
@@ -26,10 +62,11 @@ function ShowCourses() {
                 <Grid container spacing={{ xs: 4, sm: 3, md: 5, lg: 6 }} sx={{
                     padding: "2rem"
                 }}>
-                    <CourseCard />
-                    <CourseCard />
-                    <CourseCard />
-                    <CourseCard />
+                    {courses.map(course => {
+                        return (
+                            <CourseCard key={course._id} course={course}/>
+                        )
+                    })}
                 </Grid>
             </Box>
         </Container>
@@ -37,8 +74,7 @@ function ShowCourses() {
 
 }
 
-function CourseCard() {
-    const navigate = useNavigate();
+function CourseCard({ course }) {
 
     return (
         <>
@@ -49,19 +85,19 @@ function CourseCard() {
                 }}>
                     <CardMedia
                         sx={{ height: 200 }}
-                        image="/static/images/cards/contemplative-reptile.jpg"
+                        image={course.imageLink}
                         title="green iguana"
                     />
                     <CardContent>
                         <CardContent>
                             <Typography gutterBottom variant="h6" component="div">
-                                Course Title
+                                {course.title}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Lizards are a widespread group of squamate reptiles, with over 6,000
-                                species, ranging across all continents except Antarctica
+                            <Typography variant="body2" color="text.secondary" sx={{ 
+                                height: 40 
+                            }}>
+                                {course.description}
                             </Typography>
-                            
                         </CardContent>
                         <CardContent sx={{
                             display: "flex",
@@ -69,14 +105,14 @@ function CourseCard() {
                             alignItems: "center"
                         }}>
                             <Typography variant="body1">
-                                Course Price
+                                Rs {course.price}
                             </Typography>
                             <CardActions>
                                 <Button variant="outlined" 
                                         size="large" 
                                         sx={{ borderRadius: "8px" }}
                                         onClick={ () => {
-                                            navigate('/courses/1')
+                                            window.location = `/courses/${course._id}`;
                                         } }>
                                     Buy Now
                                 </Button>
