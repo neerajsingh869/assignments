@@ -1,21 +1,33 @@
 import React from 'react';
 import axios from 'axios';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import CircularProgress from '@mui/material/CircularProgress';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import { useParams, useNavigate } from 'react-router-dom';
-import Loading from './Loading';
+import { userState } from '../store/atoms/user';
 import { courseState } from '../store/atoms/course';
-import { isCourseLoadingState, courseTitleState, courseDescriptionState, coursePriceState, courseImgState, courseDetailsState } from '../store/selectors/course';
+import { isCourseLoadingState, courseTitleState, courseDescriptionState, coursePriceState, courseImgState } from '../store/selectors/course';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 function UpdateCourse() {
     let navigate = useNavigate();
 
-    console.log("Update course component re-renders");
-
     const { courseId } = useParams();
-    console.log(courseId);
 
     const setCourse = useSetRecoilState(courseState);
     const isCourseLoading = useRecoilValue(isCourseLoadingState);
+    const setUser = useSetRecoilState(userState);
     
     React.useEffect(() => {
         async function fetchCourse() {
@@ -33,7 +45,11 @@ function UpdateCourse() {
                 console.log(err.response);
                 if(err.response.status === 403){
                     window.alert("Your session ended. Please login again");
-                    navigate('/login')
+                    navigate('/login');
+                    setUser({
+                        isLoading: false,
+                        userEmail: null
+                    });
                 }
                 else{
                     window.alert("Something went wrongs. Please see the logs");
@@ -49,38 +65,48 @@ function UpdateCourse() {
     }, []);
 
     if(isCourseLoading) {
-        return <Loading />
+        return (
+            <Box className="full-container ele-center">
+                <CircularProgress />
+            </Box>
+        )
     }
 
     return (
-        <main>
+        <Box className="full-container">
             <Header />
-            <div className="d-flex form-course-wrapper">
+            <Box className="form-course-wrapper" sx={{
+                display: "flex"
+            }}>
                 <UpdateForm />
                 <CourseCard />
-            </div>
-        </main>
+            </Box>
+        </Box>
     )
 }
 
 function Header() {
-    console.log("Update course Header component re-renders");
     const courseTitle = useRecoilValue(courseTitleState);
 
     return (
-        <div style={{width: "100vw", height: "40vh", backgroundColor: "grey"}}>
-            <h1 style={{display: "flex", justifyContent: "center", paddingTop: "2.5rem", color: "#2d0080"}}>
+        <Box sx={{width: "100vw", height: "40vh", backgroundColor: "#1fbfa3"}}>
+            <Typography component="h1" variant="h3" sx={{
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: "2.5rem",
+                color: "#ffffff"
+            }}>
                 { courseTitle }
-            </h1>
-        </div>
+            </Typography>
+        </Box>
     )
 };
 
 function UpdateForm() {
     let navigate = useNavigate();
 
-    console.log("Update course form component re-renders");
     const [courseDetails, setCourse] = useRecoilState(courseState);
+    const setUser = useSetRecoilState(userState);
 
     const [title, setTitle] = React.useState(courseDetails.course.title);
     const [description, setDescription] = React.useState(courseDetails.course.description);
@@ -88,229 +114,237 @@ function UpdateForm() {
     const [price, setPrice] = React.useState(courseDetails.course.price);
     const [published, setPublished] = React.useState(courseDetails.course.published);
 
-    function formValidation() {
-        let isFormValid = true;
-        let alertMsg = null;
-        console.log(title, description, imageUrl, price, published);
+    React.useEffect(() => {
+        setTitle(courseDetails.course.title);
+        setDescription(courseDetails.course.description);
+        setImageUrl(courseDetails.course.imageLink);
+        setPrice(courseDetails.course.price);
+        setPublished(courseDetails.course.published);
+    }, [courseDetails.course]);
 
-        if(!title) {
-            alertMsg = (alertMsg === null) ? "-> Title field is mandatory. " : 
-                                    alertMsg + "\n-> Title field is mandatory. ";
-            isFormValid = false;
-        } else {
-            if(title.length >= 50) {
-                alertMsg = (alertMsg === null) ? "-> Title field excess 50 characters limit. " :
-                                        alertMsg + "\n-> Title field excess 50 characters limit. ";
-                isFormValid = false;
-            }
-        }
-
-        if(!description) {
-            alertMsg = (alertMsg === null) ? "-> Description field is mandatory. " : 
-                                    alertMsg + "\n-> Description field is mandatory. ";
-            isFormValid = false;
-        } else {
-            if(description.length >= 150) {
-                alertMsg = (alertMsg === null) ? "-> Description field excess 50 characters limit. " :
-                                        alertMsg + "\n-> Description field excess 50 characters limit. ";
-                isFormValid = false;
-            }
-        }
-
-        if(!imageUrl) {
-            alertMsg = (alertMsg === null) ? "-> ImageUrl field is mandatory. " : 
-                                    alertMsg + "\n-> ImageUrl field is mandatory. ";
-            isFormValid = false;
-        } else {
-            if(!verifyUrlInput(imageUrl)) {
-                alertMsg = (alertMsg === null) ? "-> ImageUrl format is not valid. " :
-                                    alertMsg + "\n-> ImageUrl format is not valid. ";
-                isFormValid = false;
-            }
-        }
-
-        if(!price) {
-            alertMsg = (alertMsg === null) ? "-> Price field is mandatory. " : 
-                                    alertMsg + "\n-> Price field is mandatory. ";
-            isFormValid = false;
-        } else {
-            if(price < 0) {
-                alertMsg = (alertMsg === null) ? "-> Price of course cannot be negative. " :
-                                    alertMsg + "\n-> Price of course cannot be negative. ";
-                isFormValid = false;
-            }   
-        }
-
-        if(published === "") {
-            alertMsg = (alertMsg === null) ? "-> Published field is mandatory. " : 
-                                    alertMsg + "\n-> Published field is mandatory. ";
-            isFormValid = false;
-        }
-        console.log(alertMsg);
-        return {
-            isFormValid, alertMsg
-        };
-    }
-
-    function verifyUrlInput(url) {
-        const urlPattern = /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
-        return urlPattern.test(url);
-    }
     
-    async function validateFormAndUpdateCourse(e){
+    async function handleSubmit(e){
         e.preventDefault();
 
-        let {isFormValid, alertMsg} = formValidation();
-        
-        if(!isFormValid) {
-            window.alert(alertMsg);
-        } else {
-            try {
-                let updateCourseUrl = `http://localhost:3000/admin/courses/${courseDetails.course._id}`;
-                await axios.put(updateCourseUrl, {
-                    title: title,
-                    description: description,
-                    imageLink: imageUrl,
-                    price: Number(price),
-                    published: (published === "true"),
-                    'HTTP_CONTENT_LANGUAGE': self.language
-                }, {
-                    headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('admin-token')
-                    }
-                }); 
-                let updatedCourse = {
-                    _id: courseDetails.course._id,
-                    title: title,
-                    description: description,
-                    imageLink: imageUrl,
-                    price: Number(price),
-                    published: published === "true"
+        try {
+            let updateCourseUrl = `http://localhost:3000/admin/courses/${courseDetails.course._id}`;
+            await axios.put(updateCourseUrl, {
+                title: title,
+                description: description,
+                imageLink: imageUrl,
+                price: Number(price),
+                published: published,
+                'HTTP_CONTENT_LANGUAGE': self.language
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                 }
-                setCourse({
+            }); 
+            let updatedCourse = {
+                _id: courseDetails.course._id,
+                title: title,
+                description: description,
+                imageLink: imageUrl,
+                price: Number(price),
+                published: published
+            }
+            setCourse({
+                isLoading: false,
+                course: updatedCourse
+            });
+        } catch (err) {
+            if(err.response.status === 403){
+                window.alert("Your session ended. Please login again");
+                navigate('/login');
+                setUser({
                     isLoading: false,
-                    course: updatedCourse
+                    userEmail: null
                 });
-            } catch (err) {
-                if(err.response.status === 403){
-                    window.alert("Your session ended. Please login again");
-                    navigate('/login');
-                }
-                else{
-                    window.alert("Something went wrong. Please see the logs");
-                    console.log(err.response);
-                }
+            }
+            else{
+                window.alert("Something went wrong. Please see the logs");
+                console.log(err.response);
             }
         }
     }
     
     return (
-        <section className="createCourse-section" style={{backgroundColor: "white", 
-                                                          minHeight: "28rem", 
-                                                          maxWidth: "32rem", 
-                                                          alignSelf: "flex-end",
-                                                          border: "0 solid white",
-                                                          boxShadow: "0 0 10px 2px rgba(0, 0, 0, 0.1)"}}>
-            <header className="text-center">
-                <h1>Update Course Panel</h1>
-            </header>
-            <div className="createCourseForm-wrapper">
-                <form action="">
-                    <div className="mb-normal">
-                        <label htmlFor="title">Title</label>
-                        <input type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} />
-                    </div>
-                    <div className="mb-normal">
-                        <label htmlFor="description">Description</label>
-                        <input type="text" id="description" onChange={e => setDescription(e.target.value)} value={description} />
-                    </div>
-                    <div className="mb-normal">
-                        <label htmlFor="image-url">Image Url</label>
-                        <input type="url" id="image-url" onChange={e => setImageUrl(e.target.value)} value={imageUrl} />
-                    </div>
-                    <div className="mb-large d-flex jc-between">
-                        <div>
-                            <label htmlFor="price">Price</label>
-                            <br />
-                            <input type="number" id="price" onChange={e => setPrice(e.target.value)} value={price} />
-                        </div>
-                        <div>
-                            <label htmlFor="published">Published</label>
-                            <br />
-                            <select name="" id="published" onChange={e => setPublished(e.target.value)} value={published} >
-                                <option value="true">True</option>
-                                <option value="false">False</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit" onClick={e => validateFormAndUpdateCourse(e)}>Update Course</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+        <Paper className="full-container ele-center" elevation={24} sx={{
+            height: "75%",
+            width: "45%",
+            flexDirection: "column",
+            padding: "15px 30px",
+            borderRadius: "10px",
+            alignSelf: "flex-end"
+        }}>
+            <Box sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column"
+            }}>
+                <Typography component="h1" variant="h6" sx={{ mt: 3}}>
+                    Create Course Panel
+                </Typography>
+            </Box>
+            <Box component="form"
+                onSubmit={handleSubmit}
+                sx={{ mt: 3 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            id="title"
+                            name="title"
+                            label="Title"
+                            fullWidth
+                            autoComplete="given-name"
+                            variant="outlined"
+                            size="small"
+                            value={title}
+                            onChange={ (event) => setTitle(event.target.value) }
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            id="description"
+                            name="description"
+                            label="Description"
+                            fullWidth
+                            autoComplete="given-name"
+                            variant="outlined"
+                            size="small"
+                            value={description}
+                            onChange={ (event) => {
+                                setDescription(event.target.value)
+                            } }
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            id="imageUrl"
+                            name="imageUrl"
+                            label="Image Url"
+                            fullWidth
+                            autoComplete="given-name"
+                            variant="outlined"
+                            size="small"
+                            value={imageUrl}
+                            onChange={ (event) => setImageUrl(event.target.value) }
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            required
+                            type="number"
+                            id="price"
+                            name="price"
+                            label="Price"
+                            fullWidth
+                            autoComplete="given-name"
+                            variant="outlined"
+                            size="small"
+                            value={price}
+                            onChange={ (event) => setPrice(event.target.value) }
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormControl variant="standard" sx={{ minWidth: 120, display: "flex" }} size="small">
+                            <InputLabel id="published">Published</InputLabel>
+                            <Select
+                                labelId="publispublishedhedLabel"
+                                id="published"
+                                value={published}
+                                onChange={(event) => setPublished(event.target.value)}
+                                label="Published">
+                                <MenuItem value={true}>True</MenuItem>
+                                <MenuItem value={false}>False</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 3 }}
+                >
+                    Update Course
+                </Button>
+            </Box>
+        </Paper>
     )
 }
 
 function CourseCard() {
 
-    console.log("Update course Card component re-renders");
-
     return (
-        <section className="course-card mb-large-normal" style={{backgroundColor: "white", height: "24rem", maxWidth: "25rem"}}>
-            <div>
-                <CourseCardImage />
-            </div>
-            <div style={{padding: "1rem 2rem"}}>
-                <CourseCardTitle /> 
-                <CourseCardDescription />
-            </div>
-            <CourseCardPrice />
-        </section>
+        <Card variant="outlined" sx={{
+            boxShadow: "0 0 8px 0px rgba(0,0,0,.12)",
+            borderRadius: "10px",
+            maxHeight: "25rem", 
+            width: "25rem"
+        }}>
+            <CourseCardImage />
+            <CardContent>
+                <CardContent>
+                    <CourseCardTitle /> 
+                    <CourseCardDescription />
+                </CardContent>
+                <CardContent>
+                    <CourseCardPrice />
+                </CardContent>
+            </CardContent>
+        </Card>
     )
 }
 
 function CourseCardImage() {
-
-    console.log("Update course Card Image component re-renders");
     const courseImg = useRecoilValue(courseImgState);
 
     return (
-        <div>
-            <img src={courseImg} alt="" className="course-img"/>
-        </div>
+        <CardMedia
+            sx={{ minHeight: 200 }}
+            image={courseImg}
+            title="green iguana"
+        />
     )
 }
 
 function CourseCardTitle() {
-
-    console.log("Update course Card Title component re-renders");
     const courseTitle = useRecoilValue(courseTitleState);
 
     return (
-        <div className="mb-small fs-normal">
+        <Typography gutterBottom variant="h6" component="div">
             {courseTitle}
-        </div>
+        </Typography>
     )
 }
 
 function CourseCardDescription() {
-
-    console.log("Update course Card Description component re-renders");
     const courseDesc = useRecoilValue(courseDescriptionState);
     
     return (
-        <div>{courseDesc}</div>
+        <Typography variant="body2" color="text.secondary" sx={{ 
+            height: 30 
+        }}>
+            {courseDesc}
+        </Typography>
     )
 }
 
 function CourseCardPrice() {
-
-    console.log("Update course Card Price component re-renders");
     const coursePrice = useRecoilValue(coursePriceState);
     
     return (
-        <div className="ele-center fs-large">Rs {coursePrice}</div>
+        <Typography gutterBottom variant="h6" component="div" sx={{ 
+            display: "flex",
+            justifyContent: "center"
+        }}>
+            {coursePrice}
+        </Typography>
     )
 }
 
