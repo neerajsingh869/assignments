@@ -15,7 +15,6 @@ import "./styles.css";
 
 function Login() {
     const navigate = useNavigate();
-    console.log("Login page re-renders");
 
     const [ userEmail, setUserEmail ] = React.useState("");
     const [ password, setPassword ] = React.useState("");

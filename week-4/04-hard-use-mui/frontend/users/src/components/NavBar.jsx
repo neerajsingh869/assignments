@@ -13,7 +13,6 @@ import { userEmailState } from '../store/selectors/user';
 
 function NavBar() {
     const navigate = useNavigate();
-    console.log("Navbar page re-renders");
 
     const userEmail = useRecoilValue(userEmailState);
     const setUser = useSetRecoilState(userState);

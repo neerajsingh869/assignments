@@ -15,7 +15,6 @@ import "./styles.css";
 
 function ShowCourses() {
     const navigate = useNavigate();
-    console.log("Show courses page re-renders");
 
     const [ courses, setCourses ] = React.useState(null);
 
